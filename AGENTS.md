@@ -12,6 +12,14 @@
 
 提交前缀 `[wxmini]`。改了本仓，只在本仓 `git commit`。
 
+## 主键 / 外键类型（D56，强制）
+
+类型跟库走：库列 `INT`/`BIGINT`（含 `rs_mainkey_id`）用 number，**禁止**改成十进制 string；UUID / `VARCHAR` 主键继续用 string。例外见 `../zhibo-shared/docs/API约定.md`「通则 · 主键 / 外键类型」。
+
+## 图片 / 文件上传（D60）
+
+若小程序侧需要上传：走本站 TOS（`GET /api/uploads/tos-sts` + 直传），对象 key 前缀见 `../zhibo-shared/docs/API约定.md` 权威表；**禁止**微吼 `POST /api/uploads/image`。新前缀须先登记再编码。
+
 ## 依赖版本（D36，强制）
 
 本仓一旦使用 `package.json`：
