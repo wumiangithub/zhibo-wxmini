@@ -12,6 +12,12 @@
 
 提交前缀 `[wxmini]`。改了本仓，只在本仓 `git commit`。
 
+## 工作区安全（D64，红线）
+
+- **禁止**用 `git checkout HEAD --` / `git restore` / `git reset --hard` / `git clean -fd` 覆盖或删除未提交 WIP。
+- 危险操作前先 commit（用户授权）或 `git stash push -u`。
+- 细则：`../zhibo-shared/docs/工作区与Git安全.md`。
+
 ## 主键 / 外键类型（D56，强制）
 
 类型跟库走：库列 `INT`/`BIGINT`（含 `rs_mainkey_id`）用 number，**禁止**改成十进制 string；UUID / `VARCHAR` 主键继续用 string。例外见 `../zhibo-shared/docs/API约定.md`「通则 · 主键 / 外键类型」。
