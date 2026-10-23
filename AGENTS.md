@@ -1,16 +1,16 @@
 # 接手必读（小程序 agent）
 
-本仓库只写 **微信小程序**（`zhibo-wxmini`）。每次开工先看：
+本仓库只写 **微信小程序**（`zhibo-wxmini`）。读者是 **小程序（Cursor，D49）** 与 **小程序（Grok，D70）**。每次开工先看：
 
 `../zhibo-shared/docs/工单.md`
 
-有派给「小程序」的待办就先做。架构、命名、API 在 `../zhibo-shared/docs/`，经常读，日常不要改。
+Cursor 做派给「小程序」的待办；Grok bot 做派给「小程序（Grok）」的待办。同一条工单同一时间只一人改。架构、命名、API 在 `../zhibo-shared/docs/`，经常读，日常不要改。
 
-总控可以改你的代码。**不要**改 `zhibo-backend`、`zhibo-frontend`、`zhibo-shared`，不要打开父目录 `zhibo` 当工作区。
+总控 / 副总控可以改你的代码。**不要**改 `zhibo-backend`、`zhibo-frontend`、`zhibo-shared`，不要打开父目录 `zhibo` 当工作区。本窗口不是副总控，禁止使用 `[lead-grok]`。
 
 进度写在本仓 `docs/进度.md`（没有就新建）。缺接口记在进度的阻塞项，由总控补契约或下给后端，不要自己改别的仓。
 
-提交前缀 `[wxmini]`。改了本仓，只在本仓 `git commit`。
+提交前缀：Cursor `[wxmini]`，Grok bot `[wxmini-grok]`，禁止混用。改了本仓，只在本仓 `git commit`。须用户明确要求才提交。
 
 ## 工作区安全（D64，红线）
 
@@ -36,4 +36,4 @@
 
 ## 代码评审
 
-技术总监只做 code review，结论在 `../zhibo-shared/docs/代码评审.md`，他不改你的代码。有派给「小程序」的条目就修，修完把状态改成 `已修` 并留一句怎么改的；不认同可以填 `不修` + 原因，别默默跳过。
+技术总监只做 code review，结论在 `../zhibo-shared/docs/代码评审.md`，他不改你的代码。有派给「小程序」或「小程序（Grok）」的条目就修，修完把状态改成 `已修` 并留一句怎么改的；不认同可以填 `不修` + 原因，别默默跳过。
