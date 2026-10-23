@@ -1,0 +1,60 @@
+<view class="page">
+  <view class="hero">
+    <view class="geo geo-a"></view>
+    <view class="geo geo-b"></view>
+    <view class="geo geo-c"></view>
+    <view wx:if="{{phoneMasked}}" class="phone-masked">{{phoneMasked}}</view>
+  </view>
+
+  <view class="actions">
+    <!-- 未勾选：普通按钮，不调微信 -->
+    <block wx:if="{{!agreed}}">
+      <button class="btn btn-phone" loading="{{loading}}" disabled="{{loading}}" bindtap="onTapNeedAgree">
+        <view class="btn-inner">
+          <image class="btn-icon" src="/images/phone.png" mode="aspectFit"></image>
+          <text>授权手机号快捷登录</text>
+        </view>
+      </button>
+      <button class="btn btn-wechat" loading="{{loading}}" disabled="{{loading}}" bindtap="onTapNeedAgree">
+        <view class="btn-inner">
+          <image class="btn-icon" src="/images/wechat.png" mode="aspectFit"></image>
+          <text>微信一键授权登录</text>
+        </view>
+      </button>
+    </block>
+
+    <!-- 已勾选：蓝钮走原生 getPhoneNumber；绿钮仅 wx.login -->
+    <block wx:else>
+      <button
+        class="btn btn-phone"
+        open-type="getPhoneNumber"
+        loading="{{loading}}"
+        disabled="{{loading}}"
+        bindgetphonenumber="onGetPhoneNumber"
+      >
+        <view class="btn-inner">
+          <image class="btn-icon" src="/images/phone.png" mode="aspectFit"></image>
+          <text>授权手机号快捷登录</text>
+        </view>
+      </button>
+      <button class="btn btn-wechat" loading="{{loading}}" disabled="{{loading}}" bindtap="onWechatLogin">
+        <view class="btn-inner">
+          <image class="btn-icon" src="/images/wechat.png" mode="aspectFit"></image>
+          <text>微信一键授权登录</text>
+        </view>
+      </button>
+    </block>
+
+    <view class="agree-row">
+      <view class="checkbox {{agreed ? 'checked' : ''}}" bindtap="onToggleAgree">
+        <view wx:if="{{agreed}}" class="check-mark"></view>
+      </view>
+      <view class="agree-text">
+        <text class="agree-muted" bindtap="onToggleAgree">我已阅读并同意：</text>
+        <text class="agree-link" data-type="user" bindtap="onOpenAgreement">《用户协议》</text>
+        <text class="agree-muted">和</text>
+        <text class="agree-link" data-type="privacy" bindtap="onOpenAgreement">《隐私协议》</text>
+      </view>
+    </view>
+  </view>
+</view>

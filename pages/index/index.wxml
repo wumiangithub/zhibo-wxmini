@@ -1,0 +1,7 @@
+<view class="page">
+  <view class="card">
+    <view class="status">已登录</view>
+    <view class="name">{{displayName}}</view>
+    <button class="logout" bindtap="onLogout">退出登录</button>
+  </view>
+</view>

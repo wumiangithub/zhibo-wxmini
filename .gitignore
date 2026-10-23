@@ -1,0 +1,27 @@
+# 微信开发者工具（本机私有配置，勿提交）
+project.private.config.json
+
+# 依赖与构建产物
+node_modules/
+miniprogram_npm/
+miniprogram_npm/**
+
+# 本机环境（.env 可提交；仅 .env.local 不提交）
+.env.local
+.env.*.local
+
+# IDE / 系统
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# 日志与临时文件
+*.log
+*.swp
+.temp/
+tmp/
+**/tmp-*.txt
+**/tmp*.txt

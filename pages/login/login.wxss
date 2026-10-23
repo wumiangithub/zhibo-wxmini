@@ -1,0 +1,161 @@
+page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+}
+
+.hero {
+  position: relative;
+  height: 420rpx;
+  overflow: hidden;
+  background: linear-gradient(180deg, #cfe8ff 0%, #e8f3ff 55%, #ffffff 100%);
+}
+
+.geo {
+  position: absolute;
+  border-radius: 16rpx;
+  background: rgba(255, 255, 255, 0.35);
+  border: 1rpx solid rgba(255, 255, 255, 0.5);
+}
+
+.geo-a {
+  width: 160rpx;
+  height: 160rpx;
+  left: 48rpx;
+  top: 72rpx;
+  transform: rotate(18deg);
+}
+
+.geo-b {
+  width: 120rpx;
+  height: 120rpx;
+  right: 80rpx;
+  top: 48rpx;
+  transform: rotate(-12deg);
+}
+
+.geo-c {
+  width: 90rpx;
+  height: 90rpx;
+  right: 160rpx;
+  top: 180rpx;
+  transform: rotate(28deg);
+  opacity: 0.7;
+}
+
+.phone-masked {
+  position: relative;
+  z-index: 1;
+  margin-top: 200rpx;
+  text-align: center;
+  font-size: 44rpx;
+  font-weight: 700;
+  color: #111111;
+  letter-spacing: 2rpx;
+}
+
+.actions {
+  flex: 1;
+  width: 100%;
+  padding: 48rpx 150rpx 80rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* native button overrides .btn width; need button.btn + !important */
+button.btn {
+  width: 100% !important;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 999rpx;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none;
+  color: #ffffff;
+  font-size: 30rpx;
+  font-weight: 500;
+  box-sizing: border-box;
+}
+
+button.btn::after {
+  border: none;
+}
+
+button.btn + button.btn {
+  margin-top: 44rpx !important;
+}
+
+.btn-phone {
+  background: #1677ff;
+}
+
+.btn-wechat {
+  background: #07c160;
+}
+
+.btn-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 88rpx;
+}
+
+.btn-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+  display: block;
+}
+
+.agree-row {
+  margin-top: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.checkbox {
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 50%;
+  border: 2rpx solid #c0c4cc;
+  margin-right: 12rpx;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.checkbox.checked {
+  border-color: #1677ff;
+  background: #1677ff;
+}
+
+.check-mark {
+  width: 14rpx;
+  height: 8rpx;
+  border-left: 3rpx solid #ffffff;
+  border-bottom: 3rpx solid #ffffff;
+  transform: rotate(-45deg);
+  margin-top: -2rpx;
+}
+
+.agree-text {
+  line-height: 40rpx;
+  font-size: 24rpx;
+  flex-shrink: 0;
+}
+
+.agree-muted {
+  color: #8c8c8c;
+}
+
+.agree-link {
+  color: #1677ff;
+}
