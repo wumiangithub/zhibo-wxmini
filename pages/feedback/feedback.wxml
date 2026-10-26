@@ -1,0 +1,72 @@
+<scroll-view class="page-scroll" scroll-y>
+  <view class="screen">
+    <view class="section">
+      <view class="label-row">
+        <text class="label">意见描述</text>
+        <text class="req">*</text>
+      </view>
+      <view class="cats">
+        <view
+          wx:for="{{categories}}"
+          wx:key="value"
+          class="cat {{category === item.value ? 'cat-on' : ''}}"
+          data-value="{{item.value}}"
+          bindtap="onPickCategory"
+        >{{item.label}}</view>
+      </view>
+      <view class="textarea-wrap">
+        <textarea
+          class="textarea"
+          maxlength="{{contentMax}}"
+          value="{{content}}"
+          placeholder="请描述你的功能问题或建议，帮助我们做的更好"
+          placeholder-class="ph"
+          bindinput="onContentInput"
+          show-confirm-bar="{{false}}"
+        />
+        <text class="count">{{contentLen}}/{{contentMax}}</text>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="label-row between">
+        <text class="label">相关截图</text>
+        <text class="hint">{{images.length}}/{{imagesMax}}</text>
+      </view>
+      <view class="shots">
+        <view class="shot" wx:for="{{images}}" wx:key="path">
+          <image class="shot-img" src="{{item.path}}" mode="aspectFill"></image>
+          <view class="shot-del" data-index="{{index}}" catchtap="onRemoveImage">×</view>
+        </view>
+        <view
+          wx:if="{{images.length < imagesMax}}"
+          class="shot shot-add"
+          bindtap="onAddImage"
+        >
+          <text class="plus">+</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="section contact">
+      <text class="label">联系方式</text>
+      <input
+        class="phone-input"
+        type="number"
+        maxlength="11"
+        value="{{contactPhone}}"
+        placeholder="请输入你的手机号（选填）"
+        placeholder-class="ph"
+        bindinput="onPhoneInput"
+      />
+    </view>
+  </view>
+
+  <view class="history-wrap" bindtap="onTapHistory">历史提交记录</view>
+</scroll-view>
+
+<view class="footer">
+  <button class="submit" loading="{{submitting}}" disabled="{{submitting}}" bindtap="onSubmit">
+    提交反馈
+  </button>
+</view>

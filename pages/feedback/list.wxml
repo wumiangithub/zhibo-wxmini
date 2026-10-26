@@ -1,0 +1,26 @@
+<view class="page">
+  <view wx:if="{{loading && !list.length}}" class="empty">加载中…</view>
+  <view wx:elif="{{!list.length}}" class="empty">
+    <text class="empty-text">暂无提交记录</text>
+  </view>
+  <view wx:else class="list">
+    <view
+      class="card"
+      wx:for="{{list}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="onTapItem"
+    >
+      <view class="card-top">
+        <text class="tag">{{item.categoryLabel}}</text>
+        <text class="time">{{item.createdTime}}</text>
+      </view>
+      <view class="content">{{item.content}}</view>
+      <view class="card-foot">
+        <text wx:if="{{item.imageCount}}" class="meta">截图 {{item.imageCount}} 张</text>
+        <text class="chev">详情 ›</text>
+      </view>
+    </view>
+    <view wx:if="{{noMore && list.length}}" class="end">没有更多了</view>
+  </view>
+</view>

@@ -1,0 +1,81 @@
+.page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 24rpx 32rpx 48rpx;
+  background: #f5f5f5;
+}
+
+.page.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999999;
+  font-size: 28rpx;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 8rpx 28rpx;
+  margin-bottom: 20rpx;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 88rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.card .row:last-child {
+  border-bottom: none;
+}
+
+.label {
+  font-size: 28rpx;
+  color: #666666;
+  flex-shrink: 0;
+}
+
+.value {
+  font-size: 28rpx;
+  color: #111111;
+  text-align: right;
+  margin-left: 24rpx;
+  word-break: break-all;
+}
+
+.value.muted {
+  color: #999999;
+}
+
+.block-label {
+  padding-top: 24rpx;
+  font-size: 28rpx;
+  color: #666666;
+  margin-bottom: 16rpx;
+}
+
+.body {
+  padding-bottom: 28rpx;
+  font-size: 30rpx;
+  color: #111111;
+  line-height: 1.6;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.shots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  padding-bottom: 28rpx;
+}
+
+.shot {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  background: #f0f0f0;
+}

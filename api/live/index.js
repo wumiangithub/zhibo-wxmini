@@ -5,4 +5,5 @@ module.exports = {
   auth: require('./auth'),
   profile: require('./profile'),
   uploads: require('./uploads'),
+  feedback: require('./feedback'),
 };

@@ -84,7 +84,7 @@ Page({
   },
 
   onTapFeedback() {
-    wx.showToast({ title: '意见反馈待接入', icon: 'none' });
+    wx.navigateTo({ url: '/pages/feedback/feedback' });
   },
 
   onTapHotline() {

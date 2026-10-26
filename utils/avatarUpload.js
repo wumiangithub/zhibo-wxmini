@@ -69,7 +69,17 @@ function buildObjectKey(biz, viewerId, ext) {
   if (biz === 1) {
     return prefix + id + '.' + ext;
   }
-  return prefix + id + '_' + Date.now() + '.' + ext;
+  // 反馈可连传多张：时间戳 + 随机，降低同毫秒撞键
+  return (
+    prefix +
+    id +
+    '_' +
+    Date.now() +
+    '_' +
+    Math.floor(Math.random() * 1000) +
+    '.' +
+    ext
+  );
 }
 
 /**

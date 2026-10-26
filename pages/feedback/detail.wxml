@@ -1,0 +1,43 @@
+<view class="page" wx:if="{{detail}}">
+  <view class="card">
+    <view class="row">
+      <text class="label">意见类型</text>
+      <text class="value">{{detail.categoryLabel}}</text>
+    </view>
+    <view class="row">
+      <text class="label">提交时间</text>
+      <text class="value muted">{{detail.createdTime}}</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="block-label">意见描述</view>
+    <view class="body">{{detail.content}}</view>
+  </view>
+
+  <view class="card" wx:if="{{detail.images && detail.images.length}}">
+    <view class="block-label">相关截图</view>
+    <view class="shots">
+      <image
+        wx:for="{{detail.images}}"
+        wx:key="objectKey"
+        class="shot"
+        src="{{item.url}}"
+        mode="aspectFill"
+        data-url="{{item.url}}"
+        bindtap="onPreview"
+      />
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{detail.contactPhone}}">
+    <view class="row">
+      <text class="label">联系方式</text>
+      <text class="value">{{detail.contactPhone}}</text>
+    </view>
+  </view>
+</view>
+
+<view class="page empty" wx:elif="{{!loading}}">
+  <text>反馈不存在或已删除</text>
+</view>
