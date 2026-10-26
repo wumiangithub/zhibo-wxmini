@@ -5,7 +5,7 @@
  */
 const { getAvatarUploadMode } = require('../config/env');
 const { getAccessToken, doRefreshMaybe } = require('./authUpload');
-const { getTosSts, fileUploadUrl } = require('../api/live/uploads');
+const { ensureTosSts, fileUploadUrl } = require('../api/live/uploads');
 const { postObject, buildAccessUrl } = require('./tosUpload');
 
 const MAX_BYTES = 2 * 1024 * 1024;
@@ -55,7 +55,9 @@ function contentTypeOf(ext) {
 }
 
 /**
- * `{前缀}{viewerId}_{timestamp}.{ext}`，前缀来自本文件常量，不取自 STS。
+ * 拼对象键（前缀来自本文件常量，不取自 STS）。
+ * 头像（biz=1）：`viewer/avatar/{viewerId}.{ext}`，同用户同格式覆盖，避免 TOS 堆无效图。
+ * 反馈（biz=2）：`viewer/feedback/{viewerId}_{timestamp}.{ext}`，可多张，仍带时间戳。
  * @param {number} biz
  * @param {number|string} viewerId
  * @param {string} ext
@@ -63,7 +65,11 @@ function contentTypeOf(ext) {
  */
 function buildObjectKey(biz, viewerId, ext) {
   const prefix = prefixOfBiz(biz).replace(/\/*$/, '/');
-  return prefix + String(viewerId || '0') + '_' + Date.now() + '.' + ext;
+  const id = String(viewerId || '0');
+  if (biz === 1) {
+    return prefix + id + '.' + ext;
+  }
+  return prefix + id + '_' + Date.now() + '.' + ext;
 }
 
 /**
@@ -201,7 +207,7 @@ function uploadAvatar(opts) {
 
   return assertFileSize(filePath, o.fileSize).then(() => {
     if (mode === 'direct') {
-      return getTosSts().then((sts) =>
+      return ensureTosSts().then((sts) =>
         uploadViaDirect(sts, filePath, objectKey, contentType)
       );
     }
