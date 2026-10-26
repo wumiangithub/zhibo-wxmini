@@ -1,17 +1,16 @@
 /**
  * live-service viewer 资料相关接口。
  */
-const { getBaseURL } = require('../../config/env');
 const { request } = require('../../utils/request');
 
-const UPDATE_PATH = '/api/v1/viewer/profile/update';
-const AVATAR_PATH = '/api/v1/viewer/profile/avatar';
+const UPDATE_PATH = '/viewer/profile/update';
 
 /**
- * 更新昵称 / 头像 URL。
+ * 更新昵称，或把头像的访问地址和对象键一起写入。
  * @param {object} payload
  * @param {string} payload.nickname
- * @param {string} [payload.avatarUrl] 传入时一并提交（direct 上传后）
+ * @param {string} [payload.avatarUrl] 与 avatarObjectKey 成对
+ * @param {string} [payload.avatarObjectKey] TOS 对象键
  * @returns {Promise<object>} user
  */
 function updateProfile(payload) {
@@ -19,6 +18,9 @@ function updateProfile(payload) {
   const data = { nickname: p.nickname };
   if (p.avatarUrl != null) {
     data.avatarUrl = p.avatarUrl;
+  }
+  if (p.avatarObjectKey != null) {
+    data.avatarObjectKey = p.avatarObjectKey;
   }
   return request({
     url: UPDATE_PATH,
@@ -28,15 +30,6 @@ function updateProfile(payload) {
   });
 }
 
-/**
- * 头像 proxy 上传完整 URL（供 wx.uploadFile 使用）。
- * @returns {string}
- */
-function avatarUploadUrl() {
-  return getBaseURL('live') + AVATAR_PATH;
-}
-
 module.exports = {
   updateProfile,
-  avatarUploadUrl,
 };

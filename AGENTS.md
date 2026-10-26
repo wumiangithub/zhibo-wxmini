@@ -18,13 +18,17 @@ Cursor 做派给「小程序」的待办；Grok bot 做派给「小程序（Grok
 - 危险操作前先 commit（用户授权）或 `git stash push -u`。
 - 细则：`../zhibo-shared/docs/工作区与Git安全.md`。
 
+## API 路径（D63 对齐）
+
+`config/env.js` 里各服务 **baseURL 含 `/api/v1`**（如 `http://127.0.0.1:8082/api/v1`）。`api/` 只写 `/viewer/...`，禁止再拼 `/api/v1`。以后升 v2 只改 env 一处。
+
 ## 主键 / 外键类型（D56，强制）
 
 类型跟库走：库列 `INT`/`BIGINT`（含 `rs_mainkey_id`）用 number，**禁止**改成十进制 string；UUID / `VARCHAR` 主键继续用 string。例外见 `../zhibo-shared/docs/API约定.md`「通则 · 主键 / 外键类型」。
 
 ## 图片 / 文件上传（D60）
 
-观众头像**两条都可用**，由本仓配置 `avatarUploadMode`：`proxy`（默认）=`POST /api/v1/viewer/profile/avatar`；`direct`=`GET /api/v1/viewer/uploads/tos-sts` 后直传 TOS（前缀 `viewer/avatar/`）再 `PUT .../profile/update`。昵称一律 `PUT /api/v1/viewer/profile/update`。细则见 shared `API约定.md`「观众资料」。**禁止**微吼上传接口。
+观众图片上传：对象键前缀与管理端一样由前端定义（`utils/avatarUpload.js` 的 `ViewerObjectKeyPrefix`，对齐 API约定目录表）。`proxy`（默认）拼 `objectKey` 后 `POST .../uploads/file`；`direct` 再 `GET .../tos-sts` 拿凭证后 PutObject。两条都返回 `objectKey`、`url`、`location`。头像 `biz=1`，反馈 `biz=2`。`PUT .../profile/update` 同时交 `avatarUrl` 和 `avatarObjectKey`。**禁止**微吼上传，也禁止再为单个功能加专用上传接口。
 
 ## 依赖版本（D36，强制）
 

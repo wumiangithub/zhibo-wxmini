@@ -4,7 +4,7 @@ const {
   clearSession,
   applyUser,
 } = require('../../utils/auth');
-const { getMe } = require('../../api/live/auth');
+const { getUserInfo } = require('../../api/live/auth');
 const {
   getProfile,
   clearProfile,
@@ -16,7 +16,7 @@ const {
 const HOTLINE = '4006-822-833';
 
 /**
- * 「我的」页：资料以 getMe 或返回 user 为准（T36.2）。
+ * 「我的」页：资料以 getUserInfo 返回的 user 为准。
  */
 Page({
   data: {
@@ -47,7 +47,7 @@ Page({
   },
 
   _loadMe() {
-    getMe({ silent: true })
+    getUserInfo({ silent: true })
       .then((user) => {
         applyUser(user);
         const phone = (user && user.phoneMasked) || getPhoneMasked();

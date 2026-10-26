@@ -10,7 +10,7 @@ const {
   saveSession,
 } = require('../../utils/auth');
 
-const REFRESH_PATH = '/api/v1/viewer/auth/refresh';
+const REFRESH_PATH = '/viewer/auth/refresh';
 
 /** 进行中的 refresh Promise，并发 401 共用同一次刷新 */
 let refreshPromise = null;
@@ -29,10 +29,10 @@ function getRequest() {
  * @param {boolean} [options.silent]
  * @returns {Promise<object>}
  */
-function getMe(options) {
+function getUserInfo(options) {
   const opts = options || {};
   return getRequest()({
-    url: '/api/v1/viewer/auth/me',
+    url: '/viewer/auth/user-info',
     method: 'GET',
     service: 'live',
     silent: !!opts.silent,
@@ -50,7 +50,7 @@ function getMe(options) {
 function phoneLogin(payload) {
   const p = payload || {};
   return getRequest()({
-    url: '/api/v1/viewer/auth/phone-login',
+    url: '/viewer/auth/phone-login',
     method: 'POST',
     service: 'live',
     auth: false,
@@ -72,7 +72,7 @@ function phoneLogin(payload) {
 function wechatLogin(payload) {
   const p = payload || {};
   return getRequest()({
-    url: '/api/v1/viewer/auth/wechat-login',
+    url: '/viewer/auth/wechat-login',
     method: 'POST',
     service: 'live',
     auth: false,
@@ -135,7 +135,7 @@ function refresh(options) {
 }
 
 module.exports = {
-  getMe,
+  getUserInfo,
   phoneLogin,
   wechatLogin,
   refresh,

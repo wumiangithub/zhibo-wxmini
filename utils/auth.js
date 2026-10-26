@@ -67,7 +67,7 @@ function setPhoneMasked(phoneMasked) {
 }
 
 /**
- * 将 /me 或资料接口返回的 user 同步到本地（手机号 / id / 昵称头像缓存）。
+ * 将 /user-info 或资料接口返回的 user 同步到本地（手机号 / id / 昵称头像缓存）。
  * @param {object} [user]
  */
 function applyUser(user) {

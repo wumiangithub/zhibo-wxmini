@@ -1,7 +1,8 @@
 /**
- * 统一请求：baseURL 来自 config/env.js 的 getBaseURL(service)。
- * 环境由 FORCE_ENV 或微信 envVersion 解析为 CURRENT_ENV（local|test|prod），勿在本文件硬编码域名。
- * T35.2 行为：Bearer access、HTTP200+code===0、401 自动 refresh 重试、失败 Toast。
+ * 统一请求：baseURL 来自 config/env.js（已含 /api/v1）。
+ * options.url 只写业务段（如 /viewer/auth/user-info），勿再拼 /api/v1。
+ * 环境由 FORCE_ENV 或微信 envVersion 解析；勿在本文件硬编码域名。
+ * Bearer access、HTTP200+code===0、401 自动 refresh 重试、失败 Toast。
  */
 const { getBaseURL } = require('../config/env');
 const {

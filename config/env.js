@@ -14,13 +14,14 @@
  * - test / prod：须在微信公众平台配置 request 合法域名，且使用 HTTPS；
  *   不要填 127.0.0.1，也不要依赖「不校验合法域名」
  *
- * 对齐 shared《观众端登录》：开发工具 baseURL 为 http://127.0.0.1:8082。
- * 多服务时可在此扩展；test/prod 的 live 用空字符串占位，上线前填真值。
- * 若 live 仍为空，release（prod）下请求会失败，属预期——须先写入正式 HTTPS 域名。
+ * 对齐 D63：各服务 baseURL **含** API 版本前缀（当前 `/api/v1`）。
+ * 例：http://127.0.0.1:8082/api/v1 。api 层只写 `/viewer/...`，禁止再拼 `/api/v1`。
+ * 升到 v2 时只改本文件 services（改成 .../api/v2），其它路径不用动。
+ * test/prod 占位空串，上线前填真值（须带版本前缀）。live 为空则 release 下请求失败属预期。
  *
- * T36.2：avatarUploadMode = 'proxy' | 'direct'
- * - proxy（默认）：wx.uploadFile → api/live/profile.avatarUploadUrl（后端写库）
- * - direct：api/live/uploads.getTosSts → 直传 TOS → updateProfile 带 avatarUrl
+ * avatarUploadMode = 'proxy' | 'direct'
+ * - proxy：前端前缀拼 objectKey → POST {baseURL}/viewer/uploads/file?biz=
+ * - direct：同上拼键 → GET tos-sts 拿凭证 → PutObject（前缀不取自 STS）
  */
 
 /** @type {null | 'local' | 'test' | 'prod'} 有值时覆盖微信 envVersion */
@@ -45,10 +46,10 @@ const ENV_CONFIG = {
      * @type {'proxy' | 'direct'}
      */
     avatarUploadMode: 'proxy',
-    /** 各后端服务 baseURL */
+    /** 各后端服务 baseURL（含 /api/v1） */
     services: {
-      /** live-service 根地址 */
-      live: 'http://127.0.0.1:8082',
+      /** live-service */
+      live: 'http://127.0.0.1:8082/api/v1',
     },
   },
   /** 体验版 / 测试环境 */
@@ -60,7 +61,7 @@ const ENV_CONFIG = {
     /** @type {'proxy' | 'direct'} */
     avatarUploadMode: 'proxy',
     services: {
-      // PLACEHOLDER：测试环境 HTTPS 合法域名，运维/文档下发后填写
+      // PLACEHOLDER：如 https://live-test.example.com/api/v1
       live: '',
     },
   },
@@ -73,7 +74,7 @@ const ENV_CONFIG = {
     /** @type {'proxy' | 'direct'} */
     avatarUploadMode: 'proxy',
     services: {
-      // PLACEHOLDER：生产 HTTPS 正式域名，上线前填好；否则 release 下 getBaseURL 为空、请求失败属预期
+      // PLACEHOLDER：如 https://live.example.com/api/v1
       live: '',
     },
   },

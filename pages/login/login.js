@@ -1,4 +1,4 @@
-const { getMe, phoneLogin, wechatLogin } = require('../../api/live/auth');
+const { getUserInfo, phoneLogin, wechatLogin } = require('../../api/live/auth');
 const {
   getAccessToken,
   getPhoneMasked,
@@ -19,7 +19,7 @@ Page({
   },
 
   /**
-   * 页面显示：同步脱敏手机号；若有 access 则调 getMe 校验，成功则进首页。
+   * 页面显示：同步脱敏手机号；若有 access 则调 getUserInfo 校验，成功则进首页。
    */
   onShow() {
     const phoneMasked = getPhoneMasked();
@@ -29,7 +29,7 @@ Page({
     if (!access) {
       return;
     }
-    getMe({ silent: true })
+    getUserInfo({ silent: true })
       .then(() => {
         wx.reLaunch({ url: '/pages/index/index' });
       })
