@@ -1,0 +1,36 @@
+<view class="page">
+  <view wx:if="{{loading && !list.length}}" class="empty">加载中…</view>
+  <view wx:elif="{{!list.length}}" class="empty">
+    <text class="empty-text">暂无已付款订单</text>
+  </view>
+  <view wx:else class="list">
+    <view
+      class="card"
+      wx:for="{{list}}"
+      wx:key="orderNo"
+      data-orderno="{{item.orderNo}}"
+      data-paid="{{item.paid}}"
+      bindtap="onTapItem"
+    >
+      <view class="card-head">
+        <text class="order-no">订单编号: {{item.orderNo}}</text>
+        <text class="status">{{item.statusLabel}}</text>
+      </view>
+      <view class="card-body">
+        <image
+          class="cover"
+          src="{{item.coverImg || defaultCover}}"
+          mode="aspectFill"
+        ></image>
+        <view class="info">
+          <view class="title">{{item.productName || '商品'}}</view>
+          <view wx:if="{{item.validityText}}" class="meta">{{item.validityText}}</view>
+          <view class="price-row">
+            <text class="price">¥{{item.orderMoney}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{noMore && list.length}}" class="end">没有更多了</view>
+  </view>
+</view>

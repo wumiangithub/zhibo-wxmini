@@ -68,7 +68,7 @@ Page({
   },
 
   onTapOrders() {
-    wx.showToast({ title: '全部订单待接入', icon: 'none' });
+    wx.navigateTo({ url: '/pages/orders/list' });
   },
 
   onTapLearning() {

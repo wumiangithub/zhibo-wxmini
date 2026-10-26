@@ -6,4 +6,5 @@ module.exports = {
   profile: require('./profile'),
   uploads: require('./uploads'),
   feedback: require('./feedback'),
+  watch: require('./watch'),
 };

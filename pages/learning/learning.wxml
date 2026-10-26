@@ -33,13 +33,15 @@
     </view>
   </view>
 
-  <scroll-view class="scroll" scroll-y>
-    <view wx:if="{{list.length === 0}}" class="empty">暂无相关内容</view>
+  <scroll-view class="scroll" scroll-y bindscrolltolower="onReachBottom">
+    <view wx:if="{{loading && !list.length}}" class="empty">加载中…</view>
+    <view wx:elif="{{list.length === 0}}" class="empty">暂无相关内容</view>
     <view
       wx:for="{{list}}"
       wx:key="id"
       class="item"
       data-id="{{item.id}}"
+      data-kind="{{item.kind}}"
       bindtap="onTapItem"
     >
       <view class="cover-wrap">
@@ -63,6 +65,7 @@
         </view>
       </view>
     </view>
-    <view class="hint">仅展示你有权益的直播/课程 · 样式预览</view>
+    <view wx:if="{{noMore && list.length && activeTab === 'live'}}" class="hint">没有更多了</view>
+    <view wx:elif="{{activeTab === 'course'}}" class="hint">课程列表暂为预览</view>
   </scroll-view>
 </view>

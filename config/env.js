@@ -22,6 +22,12 @@
  * avatarUploadMode = 'proxy' | 'direct'
  * - proxy：前端前缀拼 objectKey → POST {baseURL}/viewer/uploads/file?biz=
  * - direct：同上拼键 → GET tos-sts（无 biz）拿凭证 → PostObject（官方：calculatePostSignature + wx.uploadFile）
+ *
+ * orderCenterBaseURL：钱坤云订单中心根地址（无尾斜杠）。小程序直连 /order-center/...；
+ * 鉴权头 Authorization-Live-Viewers。细则见 zhibo-shared/docs/订单中心对接.md。
+ *
+ * liveWebBaseURL：观众端 H5（live-web）根地址（无尾斜杠）。「我的学习」点直播用
+ * web-view 打开 `{liveWebBaseURL}/watch/{id}`。local 默认 http://127.0.0.1:5174。
  */
 
 /** @type {null | 'local' | 'test' | 'prod'} 有值时覆盖微信 envVersion */
@@ -51,6 +57,10 @@ const ENV_CONFIG = {
       /** live-service */
       live: 'http://127.0.0.1:8082/api/v1',
     },
+    /** 订单中心 Base（测试） */
+    orderCenterBaseURL: 'http://fadada-notify.scqkxx.com',
+    /** 观众端 H5（live-web） */
+    liveWebBaseURL: 'http://127.0.0.1:5174',
   },
   /** 体验版 / 测试环境 */
   test: {
@@ -64,6 +74,10 @@ const ENV_CONFIG = {
       // PLACEHOLDER：如 https://live-test.example.com/api/v1
       live: '',
     },
+    // PLACEHOLDER：须 HTTPS 合法域名
+    orderCenterBaseURL: 'http://fadada-notify.scqkxx.com',
+    // PLACEHOLDER：观众端 H5 HTTPS（须配小程序业务域名）
+    liveWebBaseURL: '',
   },
   /** 正式版 / 生产环境 */
   prod: {
@@ -77,6 +91,10 @@ const ENV_CONFIG = {
       // PLACEHOLDER：如 https://live.example.com/api/v1
       live: '',
     },
+    // PLACEHOLDER：生产订单中心 HTTPS
+    orderCenterBaseURL: '',
+    // PLACEHOLDER：观众端 H5 HTTPS（须配小程序业务域名）
+    liveWebBaseURL: '',
   },
 };
 
@@ -158,6 +176,24 @@ function getAvatarUploadMode() {
   return mode === 'direct' ? 'direct' : 'proxy';
 }
 
+/**
+ * 订单中心根 URL（无尾斜杠）。空则直连失败。
+ * @returns {string}
+ */
+function getOrderCenterBaseURL() {
+  const raw = getEnvConfig().orderCenterBaseURL || '';
+  return String(raw).replace(/\/$/, '');
+}
+
+/**
+ * 观众端 H5（live-web）根 URL（无尾斜杠）。空则 web-view 无法打开。
+ * @returns {string}
+ */
+function getLiveWebBaseURL() {
+  const raw = getEnvConfig().liveWebBaseURL || '';
+  return String(raw).replace(/\/$/, '');
+}
+
 module.exports = {
   FORCE_ENV,
   CURRENT_ENV,
@@ -168,4 +204,6 @@ module.exports = {
   getBaseURL,
   isDebug,
   getAvatarUploadMode,
+  getOrderCenterBaseURL,
+  getLiveWebBaseURL,
 };
