@@ -1,0 +1,32 @@
+.page {
+  min-height: 100vh;
+  background: #ffffff;
+}
+
+.row {
+  min-height: 104rpx;
+  padding: 0 32rpx;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.row.last {
+  border-bottom: none;
+}
+
+.label {
+  font-size: 30rpx;
+  color: #111111;
+  line-height: 42rpx;
+}
+
+.chev {
+  font-size: 44rpx;
+  color: #bfbfbf;
+  line-height: 1;
+  font-weight: 500;
+  margin-left: 16rpx;
+}

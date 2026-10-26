@@ -1,34 +1,70 @@
-const { getAccessToken, getPhoneMasked, clearSession } = require('../../utils/auth');
+const { getAccessToken } = require('../../utils/auth');
+const { MOCK } = require('../../utils/mockNews');
 
 /**
- * 首页：登录后展示观众信息，支持退出登录。
+ * 资讯首页（原型样式 mock，接口未接）。
  */
 Page({
   data: {
-    /** 页面展示名（优先脱敏手机号，否则「微信用户」） */
-    displayName: '微信用户',
+    tabs: [
+      { key: 'live', label: '7X24' },
+      { key: 'hot', label: '热点' },
+      { key: 'market', label: '大盘' },
+      { key: 'industry', label: '行业' },
+    ],
+    activeTab: 'live',
+    liveDate: MOCK.liveDate,
+    liveList: MOCK.live,
+    cardList: MOCK.hot,
+    /** 7X24 已展开条目 id -> true */
+    expandedMap: {},
   },
 
-  /**
-   * 页面显示：无 token 则回登录页；有则刷新展示名。
-   */
   onShow() {
     const access = getAccessToken();
     if (!access) {
       wx.reLaunch({ url: '/pages/login/login' });
       return;
     }
-    const phone = getPhoneMasked();
+  },
+
+  onSwitchTab(e) {
+    const key = e.currentTarget.dataset.key;
+    if (!key || key === this.data.activeTab) return;
+    const map = {
+      live: MOCK.live,
+      hot: MOCK.hot,
+      market: MOCK.market,
+      industry: MOCK.industry,
+    };
     this.setData({
-      displayName: phone || '微信用户',
+      activeTab: key,
+      cardList: key === 'live' ? [] : map[key] || [],
+      liveList: key === 'live' ? MOCK.live : this.data.liveList,
     });
   },
 
   /**
-   * 退出登录：清会话并跳转登录页。
+   * 7X24 卡片点击：折叠三行 / 完全展开 切换。
+   * @param {WechatMiniprogram.TouchEvent} e
    */
-  onLogout() {
-    clearSession();
-    wx.reLaunch({ url: '/pages/login/login' });
+  onToggleLive(e) {
+    const id = e.currentTarget.dataset.id;
+    if (!id) return;
+    const expandedMap = Object.assign({}, this.data.expandedMap);
+    expandedMap[id] = !expandedMap[id];
+    this.setData({ expandedMap: expandedMap });
+  },
+
+  /**
+   * 热点 / 大盘 / 行业卡片进入详情。
+   * @param {WechatMiniprogram.TouchEvent} e
+   */
+  onOpenDetail(e) {
+    const id = e.currentTarget.dataset.id;
+    if (!id) return;
+    wx.navigateTo({
+      url: '/pages/detail/detail?id=' + encodeURIComponent(id),
+    });
   },
 });

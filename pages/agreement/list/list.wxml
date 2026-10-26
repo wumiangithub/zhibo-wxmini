@@ -1,0 +1,12 @@
+<view class="page">
+  <view
+    class="row {{index === items.length - 1 ? 'last' : ''}}"
+    wx:for="{{items}}"
+    wx:key="id"
+    data-id="{{item.id}}"
+    bindtap="onOpen"
+  >
+    <text class="label">{{item.title}}</text>
+    <text class="chev">›</text>
+  </view>
+</view>

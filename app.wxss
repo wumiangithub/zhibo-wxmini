@@ -4,3 +4,9 @@ page {
   font-size: 28rpx;
   box-sizing: border-box;
 }
+
+/* WeChat native button default padding pushes label off-center */
+button {
+  padding: 0;
+  box-sizing: border-box;
+}

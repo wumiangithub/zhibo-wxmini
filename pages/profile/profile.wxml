@@ -1,0 +1,26 @@
+<view class="page">
+  <view class="avatar-wrap" bindtap="onChooseAvatar">
+    <image class="avatar" src="{{avatarUrl}}" mode="aspectFill"></image>
+    <view class="camera-badge">
+      <image class="camera-icon" src="/images/icon-camera.png" mode="aspectFit"></image>
+    </view>
+  </view>
+
+  <view class="nick-row">
+    <text class="nick-label">昵称</text>
+    <input
+      class="nick-input"
+      type="nickname"
+      maxlength="{{maxLen}}"
+      value="{{nickname}}"
+      placeholder="请输入昵称"
+      bindinput="onNickInput"
+      bindblur="onNickBlur"
+      adjust-position
+    />
+    <text class="nick-count">{{nickLen}}/{{maxLen}}</text>
+  </view>
+  <view class="divider"></view>
+
+  <button class="save" loading="{{saving}}" disabled="{{saving}}" bindtap="onSave">保存</button>
+</view>

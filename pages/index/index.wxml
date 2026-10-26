@@ -1,7 +1,58 @@
 <view class="page">
-  <view class="card">
-    <view class="status">已登录</view>
-    <view class="name">{{displayName}}</view>
-    <button class="logout" bindtap="onLogout">退出登录</button>
+  <view class="tabs">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="key"
+      class="tab {{activeTab === item.key ? 'active' : ''}}"
+      data-key="{{item.key}}"
+      bindtap="onSwitchTab"
+    >
+      <text class="tab-text">{{item.label}}</text>
+      <view wx:if="{{activeTab === item.key}}" class="tab-line"></view>
+    </view>
   </view>
+
+  <!-- 7X24 时间线：默认三行，点击展开 -->
+  <scroll-view wx:if="{{activeTab === 'live'}}" class="scroll" scroll-y>
+    <view class="date-row">{{liveDate}}</view>
+    <view class="timeline">
+      <view wx:for="{{liveList}}" wx:key="id" class="tl-item">
+        <view class="tl-rail">
+          <view class="tl-dot"></view>
+          <view class="tl-line"></view>
+        </view>
+        <view class="tl-main">
+          <view class="tl-time">{{item.time}}</view>
+          <view
+            class="tl-card {{expandedMap[item.id] ? 'expanded' : 'clamped'}}"
+            data-id="{{item.id}}"
+            bindtap="onToggleLive"
+          >
+            <text class="tl-card-text">{{item.content}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="mock-tip">样式预览 · 接口未接</view>
+  </scroll-view>
+
+  <!-- 热点 / 大盘 / 行业 卡片列表 -->
+  <scroll-view wx:else class="scroll" scroll-y>
+    <view class="card-list">
+      <view
+        wx:for="{{cardList}}"
+        wx:key="id"
+        class="news-card"
+        data-id="{{item.id}}"
+        bindtap="onOpenDetail"
+      >
+        <view class="news-title">{{item.title}}</view>
+        <view class="news-meta">
+          <text>{{item.source}}</text>
+          <text class="meta-gap">{{item.time}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="mock-tip">样式预览 · 接口未接</view>
+  </scroll-view>
 </view>

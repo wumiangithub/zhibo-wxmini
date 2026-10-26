@@ -1,2 +1,3 @@
-<!--pages/agreement/privacy.wxml-->
-<text>pages/agreement/privacy.wxml</text>
+<view class="page">
+  <text class="body">协议正文待法务提供</text>
+</view>

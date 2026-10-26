@@ -94,6 +94,7 @@ Page({
       return;
     }
     this.setData({ loading: true });
+    wx.showLoading({ title: "登录中", mask: true });
     this._wxLogin()
       .then((loginCode) =>
         request({
@@ -113,6 +114,7 @@ Page({
       })
       .catch(() => {})
       .then(() => {
+        wx.hideLoading();
         this.setData({ loading: false });
       });
   },
@@ -129,6 +131,7 @@ Page({
       return;
     }
     this.setData({ loading: true });
+    wx.showLoading({ title: "登录中", mask: true });
     this._wxLogin()
       .then((code) =>
         request({
@@ -147,6 +150,7 @@ Page({
       })
       .catch(() => {})
       .then(() => {
+        wx.hideLoading();
         this.setData({ loading: false });
       });
   },

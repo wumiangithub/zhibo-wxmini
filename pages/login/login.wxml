@@ -9,13 +9,13 @@
   <view class="actions">
     <!-- 未勾选：普通按钮，不调微信 -->
     <block wx:if="{{!agreed}}">
-      <button class="btn btn-phone" loading="{{loading}}" disabled="{{loading}}" bindtap="onTapNeedAgree">
+      <button class="btn btn-phone" disabled="{{loading}}" bindtap="onTapNeedAgree">
         <view class="btn-inner">
           <image class="btn-icon" src="/images/phone.png" mode="aspectFit"></image>
           <text>授权手机号快捷登录</text>
         </view>
       </button>
-      <button class="btn btn-wechat" loading="{{loading}}" disabled="{{loading}}" bindtap="onTapNeedAgree">
+      <button class="btn btn-wechat" disabled="{{loading}}" bindtap="onTapNeedAgree">
         <view class="btn-inner">
           <image class="btn-icon" src="/images/wechat.png" mode="aspectFit"></image>
           <text>微信一键授权登录</text>
@@ -28,7 +28,7 @@
       <button
         class="btn btn-phone"
         open-type="getPhoneNumber"
-        loading="{{loading}}"
+       
         disabled="{{loading}}"
         bindgetphonenumber="onGetPhoneNumber"
       >
@@ -37,7 +37,7 @@
           <text>授权手机号快捷登录</text>
         </view>
       </button>
-      <button class="btn btn-wechat" loading="{{loading}}" disabled="{{loading}}" bindtap="onWechatLogin">
+      <button class="btn btn-wechat" disabled="{{loading}}" bindtap="onWechatLogin">
         <view class="btn-inner">
           <image class="btn-icon" src="/images/wechat.png" mode="aspectFit"></image>
           <text>微信一键授权登录</text>

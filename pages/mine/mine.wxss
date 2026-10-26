@@ -1,0 +1,136 @@
+.page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  background: #f5f5f5;
+  padding-bottom: 48rpx;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  padding: 48rpx 40rpx 56rpx;
+  background: linear-gradient(180deg, #dcebff 0%, #eaf4ff 55%, #f5f5f5 100%);
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background: #cfe3ff;
+  flex-shrink: 0;
+  margin-right: 28rpx;
+}
+
+.profile-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.nickname {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #111111;
+  line-height: 56rpx;
+  margin-bottom: 8rpx;
+}
+
+.profile-link {
+  display: flex;
+  align-items: center;
+  font-size: 26rpx;
+  color: #8c8c8c;
+  line-height: 36rpx;
+}
+
+.chev {
+  margin-left: 8rpx;
+  font-size: 44rpx;
+  color: #bfbfbf;
+  line-height: 1;
+  font-weight: 500;
+}
+
+.order-banner {
+  margin: 0 24rpx 24rpx;
+  height: 96rpx;
+  padding: 0 32rpx;
+  box-sizing: border-box;
+  border-radius: 16rpx;
+  background: #dcebff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.order-text {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1677ff;
+}
+
+.order-icon {
+  width: 44rpx;
+  height: 44rpx;
+}
+
+.menu-card {
+  margin: 0 24rpx;
+  background: #ffffff;
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+.menu-item {
+  min-height: 100rpx;
+  padding: 0 32rpx;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.menu-item.last {
+  border-bottom: none;
+}
+
+.menu-label {
+  font-size: 30rpx;
+  color: #111111;
+}
+
+.menu-right {
+  display: flex;
+  align-items: center;
+}
+
+.menu-value {
+  font-size: 28rpx;
+  color: #8c8c8c;
+  margin-right: 8rpx;
+}
+
+.hotline {
+  margin-right: 0;
+  color: #595959;
+}
+
+.logout-wrap {
+  margin: 48rpx 24rpx 0;
+}
+
+.logout {
+  padding: 0;
+  height: 96rpx;
+  line-height: 96rpx;
+  border-radius: 16rpx;
+  background: #ffffff;
+  color: #ff4d4f;
+  font-size: 32rpx;
+  font-weight: 500;
+  border: none;
+}
+
+.logout::after {
+  border: none;
+}

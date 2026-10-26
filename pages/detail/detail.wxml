@@ -1,0 +1,10 @@
+<view class="page">
+  <view class="title">{{title}}</view>
+  <view class="meta">
+    <text>{{source}}</text>
+    <text class="meta-gap">{{time}}</text>
+  </view>
+  <view class="body">
+    <text class="body-text" user-select>{{body}}</text>
+  </view>
+</view>

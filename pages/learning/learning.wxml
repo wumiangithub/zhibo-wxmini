@@ -1,0 +1,68 @@
+<view class="page">
+  <view class="search-wrap">
+    <view class="search-box">
+      <text class="search-icon">⌕</text>
+      <input
+        class="search-input"
+        value="{{keyword}}"
+        placeholder="请输入直播/课程名称"
+        placeholder-class="search-ph"
+        confirm-type="search"
+        bindinput="onKeywordInput"
+        bindconfirm="onSearch"
+      />
+    </view>
+  </view>
+
+  <view class="tabs">
+    <view
+      class="tab {{activeTab === 'live' ? 'active' : ''}}"
+      data-tab="live"
+      bindtap="onSwitchTab"
+    >
+      <text>直播</text>
+      <view wx:if="{{activeTab === 'live'}}" class="tab-line"></view>
+    </view>
+    <view
+      class="tab {{activeTab === 'course' ? 'active' : ''}}"
+      data-tab="course"
+      bindtap="onSwitchTab"
+    >
+      <text>课程</text>
+      <view wx:if="{{activeTab === 'course'}}" class="tab-line"></view>
+    </view>
+  </view>
+
+  <scroll-view class="scroll" scroll-y>
+    <view wx:if="{{list.length === 0}}" class="empty">暂无相关内容</view>
+    <view
+      wx:for="{{list}}"
+      wx:key="id"
+      class="item"
+      data-id="{{item.id}}"
+      bindtap="onTapItem"
+    >
+      <view class="cover-wrap">
+        <image class="cover" src="{{item.cover}}" mode="aspectFill"></image>
+        <view class="cover-tag">{{item.coverTag}}</view>
+      </view>
+      <view class="item-main">
+        <view class="item-title">{{item.title}}</view>
+
+        <!-- 直播：状态点 + 时间 -->
+        <view wx:if="{{activeTab === 'live'}}" class="item-meta">
+          <view class="dot {{item.status === 'living' ? 'living' : 'ended'}}"></view>
+          <text class="status {{item.status === 'living' ? 'living-text' : ''}}">{{item.statusText}}</text>
+          <text wx:if="{{item.time}}" class="time">{{item.time}}</text>
+        </view>
+
+        <!-- 课程：子课程数 + 右侧时间 -->
+        <view wx:else class="item-meta course-meta">
+          <text class="sub-title">{{item.subTitle}}</text>
+          <text class="time">{{item.time}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="hint">仅展示你有权益的直播/课程 · 样式预览</view>
+  </scroll-view>
+</view>

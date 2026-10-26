@@ -1,15 +1,42 @@
 {
   "pages": [
-    "pages/login/login",
     "pages/index/index",
+    "pages/mine/mine",
+    "pages/login/login",
+    "pages/detail/detail",
+    "pages/profile/profile",
+    "pages/learning/learning",
+    "pages/bind-phone/bind-phone",
+    "pages/agreement/list/list",
     "pages/agreement/user/user",
-    "pages/agreement/privacy/privacy"
+    "pages/agreement/privacy/privacy",
+    "pages/agreement/stub/stub"
   ],
   "window": {
-    "navigationBarTitleText": "钱坤云",
+    "navigationBarTitleText": "钱多多",
     "navigationBarBackgroundColor": "#ffffff",
     "navigationBarTextStyle": "black",
-    "backgroundColor": "#f5f7fa"
+    "backgroundColor": "#f5f5f5"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#1677ff",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/tab-home.png",
+        "selectedIconPath": "images/tab-home-active.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "images/tab-mine.png",
+        "selectedIconPath": "images/tab-mine-active.png"
+      }
+    ]
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json"
