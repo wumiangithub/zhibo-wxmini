@@ -1,5 +1,6 @@
 const { getAccessToken, getViewerId, applyUser } = require('../../utils/auth');
-const { request } = require('../../utils/request');
+const { getMe } = require('../../api/live/auth');
+const { updateProfile } = require('../../api/live/profile');
 const { uploadAvatar, getAvatarUploadMode } = require('../../utils/avatarUpload');
 const {
   getProfile,
@@ -37,7 +38,7 @@ Page({
   },
 
   /**
-   * 拉取 /me，以服务端 user 为准回填。
+   * 拉取 getMe，以服务端 user 为准回填。
    */
   _loadMe() {
     const cached = getProfile();
@@ -49,11 +50,7 @@ Page({
       pendingPath: '',
       pendingSize: 0,
     });
-    request({
-      url: '/api/v1/viewer/auth/me',
-      method: 'GET',
-      silent: true,
-    })
+    getMe({ silent: true })
       .then((user) => {
         applyUser(user);
         const p = fromUser(user);
@@ -153,11 +150,7 @@ Page({
 
     // 未改头像：只更新昵称
     if (!pendingPath) {
-      request({
-        url: '/api/v1/viewer/profile/update',
-        method: 'PUT',
-        data: { nickname: nickname },
-      })
+      updateProfile({ nickname: nickname })
         .then(afterOk)
         .catch(fail)
         .then(finish);
@@ -173,11 +166,7 @@ Page({
       .then((up) => {
         if (mode === 'proxy' || up.mode === 'proxy') {
           // proxy 已写库头像；保存时只提交昵称
-          return request({
-            url: '/api/v1/viewer/profile/update',
-            method: 'PUT',
-            data: { nickname: nickname },
-          }).then((user) => {
+          return updateProfile({ nickname: nickname }).then((user) => {
             // 若 update 未带回 avatar，用 upload 返回的
             if (user && !user.avatarUrl && up.avatarUrl) {
               user.avatarUrl = up.avatarUrl;
@@ -187,13 +176,9 @@ Page({
           });
         }
         // direct：必须带 avatarUrl
-        return request({
-          url: '/api/v1/viewer/profile/update',
-          method: 'PUT',
-          data: {
-            nickname: nickname,
-            avatarUrl: up.avatarUrl,
-          },
+        return updateProfile({
+          nickname: nickname,
+          avatarUrl: up.avatarUrl,
         });
       })
       .then(afterOk)

@@ -1,9 +1,10 @@
 /**
  * 观众头像上传：按 env.avatarUploadMode 走 proxy 或 direct（T36.2）。
  */
-const { getBaseURL, getAvatarUploadMode } = require('../config/env');
+const { getAvatarUploadMode } = require('../config/env');
 const { getAccessToken, doRefreshMaybe } = require('./authUpload');
-const { request } = require('./request');
+const { avatarUploadUrl } = require('../api/live/profile');
+const { getTosSts } = require('../api/live/uploads');
 const { putObject, buildAccessUrl } = require('./tosPut');
 
 const MAX_BYTES = 2 * 1024 * 1024;
@@ -63,17 +64,16 @@ function assertFileSize(filePath, knownSize) {
 }
 
 /**
- * proxy：wx.uploadFile → POST /api/v1/viewer/profile/avatar
+ * proxy：wx.uploadFile 打 api/live/profile.avatarUploadUrl（后端代写库）
  * @param {string} filePath
  * @param {boolean} [_retried]
  * @returns {Promise<object>} user
  */
 function uploadViaProxy(filePath, _retried) {
-  const baseURL = getBaseURL('live');
   const token = getAccessToken();
   return new Promise((resolve, reject) => {
     wx.uploadFile({
-      url: baseURL + '/api/v1/viewer/profile/avatar',
+      url: avatarUploadUrl(),
       filePath: filePath,
       name: 'file',
       header: token ? { Authorization: 'Bearer ' + token } : {},
@@ -114,10 +114,7 @@ function uploadViaProxy(filePath, _retried) {
 function uploadViaDirect(filePath, viewerId) {
   const ext = guessExt(filePath);
   const contentType = contentTypeOf(ext);
-  return request({
-    url: '/api/v1/viewer/uploads/tos-sts',
-    method: 'GET',
-  }).then((sts) => {
+  return getTosSts().then((sts) => {
     const prefix = (sts.keyPrefix || 'viewer/avatar/').replace(/\/*$/, '/');
     const objectKey = prefix + String(viewerId || '0') + '_' + Date.now() + '.' + ext;
     return new Promise((resolve, reject) => {
@@ -152,7 +149,7 @@ function uploadViaDirect(filePath, viewerId) {
 }
 
 /**
- * 按当前模式上传头像。
+ * 按当前模式上传头像
  * @param {object} opts
  * @param {string} opts.filePath 本地临时路径
  * @param {number} [opts.fileSize]

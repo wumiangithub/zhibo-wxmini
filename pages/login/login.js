@@ -1,4 +1,4 @@
-const { request } = require('../../utils/request');
+const { getMe, phoneLogin, wechatLogin } = require('../../api/live/auth');
 const {
   getAccessToken,
   getPhoneMasked,
@@ -19,7 +19,7 @@ Page({
   },
 
   /**
-   * 页面显示：同步脱敏手机号；若有 access 则调 /me 校验，成功则进首页。
+   * 页面显示：同步脱敏手机号；若有 access 则调 getMe 校验，成功则进首页。
    */
   onShow() {
     const phoneMasked = getPhoneMasked();
@@ -29,11 +29,7 @@ Page({
     if (!access) {
       return;
     }
-    request({
-      url: '/api/v1/viewer/auth/me',
-      method: 'GET',
-      silent: true,
-    })
+    getMe({ silent: true })
       .then(() => {
         wx.reLaunch({ url: '/pages/index/index' });
       })
@@ -73,7 +69,7 @@ Page({
   },
 
   /**
-   * 手机号快速验证回调：拿 phoneCode + wx.login code 调 phone-login。
+   * 手机号快速验证回调：拿 phoneCode + wx.login code 调 phoneLogin。
    * @param {WechatMiniprogram.ButtonGetPhoneNumber} e
    */
   onGetPhoneNumber(e) {
@@ -97,15 +93,10 @@ Page({
     wx.showLoading({ title: "登录中", mask: true });
     this._wxLogin()
       .then((loginCode) =>
-        request({
-          url: '/api/v1/viewer/auth/phone-login',
-          method: 'POST',
-          auth: false,
-          data: {
-            loginCode: loginCode,
-            phoneCode: detail.code,
-            agreed: true,
-          },
+        phoneLogin({
+          loginCode: loginCode,
+          phoneCode: detail.code,
+          agreed: true,
         })
       )
       .then((data) => {
@@ -120,7 +111,7 @@ Page({
   },
 
   /**
-   * 微信登录（仅 code，不强制手机号）：调 wechat-login 后进首页。
+   * 微信登录（仅 code，不强制手机号）：调 wechatLogin 后进首页。
    */
   onWechatLogin() {
     if (this.data.loading) {
@@ -134,14 +125,9 @@ Page({
     wx.showLoading({ title: "登录中", mask: true });
     this._wxLogin()
       .then((code) =>
-        request({
-          url: '/api/v1/viewer/auth/wechat-login',
-          method: 'POST',
-          auth: false,
-          data: {
-            code: code,
-            agreed: true,
-          },
+        wechatLogin({
+          code: code,
+          agreed: true,
         })
       )
       .then((data) => {

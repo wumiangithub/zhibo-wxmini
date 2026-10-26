@@ -1,15 +1,12 @@
 /**
- * 头像上传用的鉴权辅助，避免 request ↔ avatarUpload 环依赖。
+ * 头像上传用的鉴权辅助，避免 request 与 avatarUpload 互相牵制。
+ * refresh 统一走 api/live/auth，不再重复写路径。
  */
 const {
   getAccessToken,
   getRefreshToken,
-  saveSession,
   clearSessionAndGoLogin,
 } = require('./auth');
-const { getBaseURL } = require('../config/env');
-
-let refreshPromise = null;
 
 /**
  * @returns {string}
@@ -19,45 +16,23 @@ function getAccessTokenExport() {
 }
 
 /**
- * 与 request.doRefresh 同逻辑的轻量刷新。
+ * 与 request.doRefresh 同源（api/live/auth.refresh）；失败时清票跳登录。
  * @returns {Promise<object>}
  */
 function doRefreshMaybe() {
-  if (refreshPromise) return refreshPromise;
-  const accessToken = getAccessToken();
-  const refreshToken = getRefreshToken();
-  if (!refreshToken) {
+  if (!getRefreshToken()) {
     clearSessionAndGoLogin();
     return Promise.reject({ code: 401, msg: '未登录' });
   }
-  const baseURL = getBaseURL('live');
-  refreshPromise = new Promise((resolve, reject) => {
-    wx.request({
-      url: baseURL + '/api/v1/viewer/auth/refresh',
-      method: 'POST',
-      data: {
-        accessToken: accessToken || '',
-        refreshToken: refreshToken,
-      },
-      header: { 'Content-Type': 'application/json' },
-      success(res) {
-        const body = res.data || {};
-        if (res.statusCode === 200 && body.code === 0 && body.data) {
-          saveSession(body.data);
-          resolve(body.data);
-          return;
-        }
+  return require('../api/live/auth')
+    .refresh()
+    .catch((err) => {
+      // 业务失败清票；纯网络 fail（带 errMsg）不清，与原逻辑一致
+      if (!(err && err.errMsg)) {
         clearSessionAndGoLogin();
-        reject(body);
-      },
-      fail(err) {
-        reject(err || { msg: '网络异常' });
-      },
+      }
+      return Promise.reject(err);
     });
-  }).finally(() => {
-    refreshPromise = null;
-  });
-  return refreshPromise;
 }
 
 module.exports = {

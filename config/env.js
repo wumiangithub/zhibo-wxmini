@@ -19,8 +19,8 @@
  * 若 live 仍为空，release（prod）下请求会失败，属预期——须先写入正式 HTTPS 域名。
  *
  * T36.2：avatarUploadMode = 'proxy' | 'direct'
- * - proxy（默认）：wx.uploadFile → POST /api/v1/viewer/profile/avatar（后端写库）
- * - direct：GET /api/v1/viewer/uploads/tos-sts → 直传 TOS → PUT profile/update 带 avatarUrl
+ * - proxy（默认）：wx.uploadFile → api/live/profile.avatarUploadUrl（后端写库）
+ * - direct：api/live/uploads.getTosSts → 直传 TOS → updateProfile 带 avatarUrl
  */
 
 /** @type {null | 'local' | 'test' | 'prod'} 有值时覆盖微信 envVersion */
