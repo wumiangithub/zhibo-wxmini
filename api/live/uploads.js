@@ -5,14 +5,12 @@ const { getBaseURL } = require('../../config/env');
 const { request } = require('../../utils/request');
 
 /**
- * 直传临时凭证。只取凭证与 cdnUrl；对象键前缀由前端 ViewerObjectKeyPrefix 定义。
- * @param {number} [biz] 1 头像 / 2 意见反馈截图
+ * 直传临时凭证。与管理端 tos-sts 同形，无 biz；前缀由前端 ViewerObjectKeyPrefix 定义。
  * @returns {Promise<object>}
  */
-function getTosSts(biz) {
-  const useBiz = biz == null ? 1 : biz;
+function getTosSts() {
   return request({
-    url: '/viewer/uploads/tos-sts?biz=' + useBiz,
+    url: '/viewer/uploads/tos-sts',
     method: 'GET',
     service: 'live',
   });

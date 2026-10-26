@@ -21,7 +21,7 @@
  *
  * avatarUploadMode = 'proxy' | 'direct'
  * - proxy：前端前缀拼 objectKey → POST {baseURL}/viewer/uploads/file?biz=
- * - direct：同上拼键 → GET tos-sts 拿凭证 → PutObject（前缀不取自 STS）
+ * - direct：同上拼键 → GET tos-sts（无 biz）拿凭证 → PostObject（官方：calculatePostSignature + wx.uploadFile）
  */
 
 /** @type {null | 'local' | 'test' | 'prod'} 有值时覆盖微信 envVersion */
@@ -45,7 +45,7 @@ const ENV_CONFIG = {
      * 头像上传模式：proxy=经后端 multipart；direct=STS 直传 TOS。
      * @type {'proxy' | 'direct'}
      */
-    avatarUploadMode: 'proxy',
+    avatarUploadMode: 'direct',
     /** 各后端服务 baseURL（含 /api/v1） */
     services: {
       /** live-service */

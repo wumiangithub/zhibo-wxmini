@@ -1,12 +1,12 @@
 /**
  * 观众图片上传。前缀与管理端一样由前端按功能定义（对齐 API约定「对象 key 目录」）。
- * proxy：拼 objectKey → POST uploads/file；direct：先 tos-sts 拿凭证再 PutObject。
+ * proxy：拼 objectKey → POST uploads/file；direct：tos-sts 拿凭证后 PostObject（SDK 签名 + wx.uploadFile）。
  * 返回 objectKey、url、location。biz：1 头像 / 2 意见反馈截图。
  */
 const { getAvatarUploadMode } = require('../config/env');
 const { getAccessToken, doRefreshMaybe } = require('./authUpload');
 const { getTosSts, fileUploadUrl } = require('../api/live/uploads');
-const { putObject, buildAccessUrl } = require('./tosPut');
+const { postObject, buildAccessUrl } = require('./tosUpload');
 
 const MAX_BYTES = 2 * 1024 * 1024;
 
@@ -96,7 +96,7 @@ function assertFileSize(filePath, knownSize) {
 }
 
 /**
- * 中转：objectKey + file（+ contentType），与直传 PutObject 入参对齐。
+ * 中转：objectKey + file（+ contentType），与直传 PostObject 入参对齐。
  * @param {string} filePath
  * @param {number} biz
  * @param {string} objectKey
@@ -149,7 +149,8 @@ function uploadViaProxy(filePath, biz, objectKey, contentType, _retried) {
 }
 
 /**
- * 直传 PutObject。STS 只提供凭证与 CDN；objectKey 已由前端拼好。
+ * 直传 PostObject（官方小程序文档：SDK 算表单签名 + wx.uploadFile）。
+ * STS 只提供凭证与 CDN；objectKey 已由前端拼好。
  * @param {object} sts
  * @param {string} filePath
  * @param {string} objectKey
@@ -157,35 +158,24 @@ function uploadViaProxy(filePath, biz, objectKey, contentType, _retried) {
  * @returns {Promise<{objectKey: string, url: string, location: string}>}
  */
 function uploadViaDirect(sts, filePath, objectKey, contentType) {
-  return new Promise((resolve, reject) => {
-    wx.getFileSystemManager().readFile({
-      filePath: filePath,
-      success(fileRes) {
-        putObject({
-          region: sts.region,
-          endpoint: sts.endpoint,
-          bucketName: sts.bucketName,
-          accessKeyId: sts.accessKeyId,
-          secretAccessKey: sts.secretAccessKey,
-          sessionToken: sts.sessionToken,
-          objectKey: objectKey,
-          body: fileRes.data,
-          contentType: contentType,
-        })
-          .then(() => {
-            const location = 'https://' + sts.bucketName + '.' + sts.endpoint + '/' + objectKey;
-            resolve({
-              objectKey: objectKey,
-              url: buildAccessUrl(sts.cdnUrl, objectKey, sts.bucketName, sts.endpoint),
-              location: location,
-            });
-          })
-          .catch(reject);
-      },
-      fail() {
-        reject({ msg: '读取图片失败' });
-      },
-    });
+  return postObject({
+    region: sts.region,
+    endpoint: sts.endpoint,
+    bucketName: sts.bucketName,
+    accessKeyId: sts.accessKeyId,
+    secretAccessKey: sts.secretAccessKey,
+    sessionToken: sts.sessionToken,
+    objectKey: objectKey,
+    filePath: filePath,
+    contentType: contentType,
+  }).then(() => {
+    const location =
+      'https://' + sts.bucketName + '.' + sts.endpoint + '/' + objectKey;
+    return {
+      objectKey: objectKey,
+      url: buildAccessUrl(sts.cdnUrl, objectKey, sts.bucketName, sts.endpoint),
+      location: location,
+    };
   });
 }
 
@@ -211,7 +201,7 @@ function uploadAvatar(opts) {
 
   return assertFileSize(filePath, o.fileSize).then(() => {
     if (mode === 'direct') {
-      return getTosSts(biz).then((sts) =>
+      return getTosSts().then((sts) =>
         uploadViaDirect(sts, filePath, objectKey, contentType)
       );
     }

@@ -1,0 +1,12 @@
+{
+  "name": "zhibo-wxmini",
+  "private": true,
+  "version": "0.0.1",
+  "description": "观众端微信小程序",
+  "scripts": {
+    "build:npm": "node scripts/build-npm.js"
+  },
+  "dependencies": {
+    "@volcengine/tos-sdk": "2.9.1"
+  }
+}
