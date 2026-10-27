@@ -7,4 +7,5 @@ module.exports = {
   uploads: require('./uploads'),
   feedback: require('./feedback'),
   watch: require('./watch'),
+  presence: require('./presence'),
 };
