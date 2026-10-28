@@ -1,4 +1,5 @@
 const { getUserInfo, phoneLogin, wechatLogin } = require('../../api/live/auth');
+const { CURRENT_ENV } = require('../../config/env');
 const {
   getAccessToken,
   getPhoneMasked,
@@ -7,6 +8,7 @@ const {
 
 /**
  * 登录页：协议勾选、手机号授权登录、微信登录；已登录则跳转首页。
+ * local 额外展示「其他登录方式」→ 明文手机号造号页。
  */
 Page({
   data: {
@@ -16,6 +18,8 @@ Page({
     loading: false,
     /** 本地缓存的脱敏手机号（展示用） */
     phoneMasked: '',
+    /** 是否展示开发用「其他登录方式」（仅 local） */
+    showDevLogin: CURRENT_ENV === 'local',
   },
 
   /**
@@ -23,7 +27,10 @@ Page({
    */
   onShow() {
     const phoneMasked = getPhoneMasked();
-    this.setData({ phoneMasked: phoneMasked || '' });
+    this.setData({
+      phoneMasked: phoneMasked || '',
+      showDevLogin: CURRENT_ENV === 'local',
+    });
 
     const access = getAccessToken();
     if (!access) {
@@ -66,6 +73,20 @@ Page({
       title: '请先阅读并同意用户协议和隐私协议',
       icon: 'none',
     });
+  },
+
+  /**
+   * 其他登录方式（仅 local）：须已勾选协议，再进明文手机号页。
+   */
+  onOtherLogin() {
+    if (CURRENT_ENV !== 'local') {
+      return;
+    }
+    if (!this.data.agreed) {
+      this.onTapNeedAgree();
+      return;
+    }
+    wx.navigateTo({ url: '/pages/dev-phone-login/dev-phone-login' });
   },
 
   /**

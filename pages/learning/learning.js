@@ -1,10 +1,7 @@
 const { getAccessToken } = require('../../utils/auth');
 const { filterLearning } = require('../../utils/mockLearning');
-const {
-  listWatchActivities,
-  watchStateLabel,
-  isLivingState,
-} = require('../../api/live/watch');
+const { listLearningLives } = require('../../api/live/learning');
+const { watchStateLabel, isLivingState } = require('../../api/live/watch');
 
 /** 每页条数 */
 const PAGE_SIZE = 20;
@@ -12,8 +9,8 @@ const PAGE_SIZE = 20;
 const DEFAULT_COVER = '/images/cover-live-1.png';
 
 /**
- * 我的学习：直播 Tab 拉 GET /watch/activities，点进 web-view 嵌 live-web `/watch/:id`；
- * 课程 Tab 暂 mock。
+ * 我的学习：直播 Tab 拉 GET /viewer/learning/lives（仅有观看权益场次），
+ * 点进 web-view 嵌 live-web `/watch/:id`；课程 Tab 暂 mock。
  */
 Page({
   data: {
@@ -101,7 +98,7 @@ Page({
   _fetchLive(page, replace) {
     if (this.data.loading) return Promise.resolve();
     this.setData({ loading: true });
-    return listWatchActivities({ page: page, pageSize: PAGE_SIZE })
+    return listLearningLives({ page: page, pageSize: PAGE_SIZE })
       .then((data) => {
         const kw = (this.data.keyword || '').trim();
         let rows = ((data && data.list) || []).map((item) => this._toLiveView(item));

@@ -1,16 +1,8 @@
 <view class="page">
   <view class="search-wrap">
     <view class="search-box">
-      <text class="search-icon">⌕</text>
-      <input
-        class="search-input"
-        value="{{keyword}}"
-        placeholder="请输入直播/课程名称"
-        placeholder-class="search-ph"
-        confirm-type="search"
-        bindinput="onKeywordInput"
-        bindconfirm="onSearch"
-      />
+      <image class="search-icon" src="/images/icon-search.png" mode="aspectFit" bindtap="onSearch" />
+      <input class="search-input" value="{{keyword}}" placeholder="请输入直播/课程名称" placeholder-class="search-ph" confirm-type="search" bindinput="onKeywordInput" bindconfirm="onSearch" />
     </view>
   </view>
 

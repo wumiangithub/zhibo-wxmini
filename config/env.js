@@ -58,7 +58,7 @@ const ENV_CONFIG = {
       live: 'http://127.0.0.1:8082/api/v1',
     },
     /** 订单中心 Base（测试） */
-    orderCenterBaseURL: 'http://fadada-notify.scqkxx.com',
+    orderCenterBaseURL: 'http://oms-api.scqkxx.com',
     /** 观众端 H5（live-web） */
     liveWebBaseURL: 'http://127.0.0.1:5174',
   },
@@ -74,8 +74,8 @@ const ENV_CONFIG = {
       // PLACEHOLDER：如 https://live-test.example.com/api/v1
       live: '',
     },
-    // PLACEHOLDER：须 HTTPS 合法域名
-    orderCenterBaseURL: 'http://fadada-notify.scqkxx.com',
+    // PLACEHOLDER：须 HTTPS 合法域名（当前测试：oms-api）
+    orderCenterBaseURL: 'http://oms-api.scqkxx.com',
     // PLACEHOLDER：观众端 H5 HTTPS（须配小程序业务域名）
     liveWebBaseURL: '',
   },

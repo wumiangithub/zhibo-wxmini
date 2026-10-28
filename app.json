@@ -3,6 +3,7 @@
     "pages/index/index",
     "pages/mine/mine",
     "pages/login/login",
+    "pages/dev-phone-login/dev-phone-login",
     "pages/detail/detail",
     "pages/profile/profile",
     "pages/feedback/list",

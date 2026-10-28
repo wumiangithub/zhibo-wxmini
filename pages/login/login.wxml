@@ -56,5 +56,8 @@
         <text class="agree-link" data-type="privacy" bindtap="onOpenAgreement">《隐私协议》</text>
       </view>
     </view>
+
+    <!-- 仅 local：开发造号入口；test/prod 不渲染 -->
+    <view wx:if="{{showDevLogin}}" class="other-login" bindtap="onOtherLogin">其他登录方式</view>
   </view>
 </view>

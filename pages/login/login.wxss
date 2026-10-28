@@ -159,3 +159,11 @@ button.btn + button.btn {
 .agree-link {
   color: #1677ff;
 }
+
+.other-login {
+  margin-top: 48rpx;
+  text-align: center;
+  font-size: 26rpx;
+  color: #8c8c8c;
+  line-height: 40rpx;
+}

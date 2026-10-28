@@ -84,6 +84,27 @@ function wechatLogin(payload) {
 }
 
 /**
+ * 仅 local：明文手机号登录 / 自动注册（开发造号）。
+ * @param {object} payload
+ * @param {string} payload.phone 1 开头 11 位
+ * @param {boolean} [payload.agreed]
+ * @returns {Promise<object>} 会话 data
+ */
+function devPhoneLogin(payload) {
+  const p = payload || {};
+  return getRequest()({
+    url: '/viewer/auth/dev-phone-login',
+    method: 'POST',
+    service: 'live',
+    auth: false,
+    data: {
+      phone: p.phone,
+      agreed: !!p.agreed,
+    },
+  });
+}
+
+/**
  * 刷新会话。直接 wx.request，成功后 saveSession。
  * 可传 accessToken / refreshToken，缺省读本地 storage。
  * @param {object} [options]
@@ -138,5 +159,6 @@ module.exports = {
   getUserInfo,
   phoneLogin,
   wechatLogin,
+  devPhoneLogin,
   refresh,
 };

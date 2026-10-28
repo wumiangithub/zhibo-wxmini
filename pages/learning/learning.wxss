@@ -21,17 +21,19 @@
   box-sizing: border-box;
 }
 
-.search-icon {
-  font-size: 32rpx;
-  color: #bfbfbf;
-  margin-right: 12rpx;
-}
-
 .search-input {
   flex: 1;
   height: 72rpx;
   font-size: 28rpx;
   color: #111111;
+  min-width: 0;
+}
+
+.search-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 12rpx;
+  flex-shrink: 0;
 }
 
 .search-ph {
