@@ -1,7 +1,11 @@
+const { getAccessToken, getViewerId } = require('../../utils/auth');
+const { displayNickname } = require('../../utils/displayNickname');
 const { getLiveWebBaseURL } = require('../../config/env');
 
 /**
- * 嵌套观众端 H5（live-web）观看页：`{liveWebBaseURL}/watch/{id}`。
+ * 嵌套观众端 H5（live-web）观看页：
+ * `{liveWebBaseURL}/watch/{id}?viewerId=…&nickname=…`（及既有 invite `c=` 等）。
+ * 身份与展示昵称靠 query 传给 H5（不 postMessage、H5 不必再调 user-info）。
  * 业务域名须在公众平台配置；local 开发者工具勾选不校验合法域名。
  */
 Page({
@@ -10,6 +14,10 @@ Page({
   },
 
   onLoad(query) {
+    if (!getAccessToken()) {
+      wx.reLaunch({ url: '/pages/login/login' });
+      return;
+    }
     const id = query && query.id ? String(query.id).trim() : '';
     if (!id) {
       wx.showToast({ title: '缺少直播 id', icon: 'none' });
@@ -20,7 +28,31 @@ Page({
       wx.showToast({ title: '未配置观众端地址', icon: 'none' });
       return;
     }
-    const src = base + '/watch/' + encodeURIComponent(id);
+
+    const pairs = [];
+    Object.keys(query || {}).forEach((key) => {
+      if (key === 'id' || key === 'viewerId' || key === 'nickname') return;
+      const raw = query[key];
+      if (raw == null || raw === '') return;
+      pairs.push(
+        encodeURIComponent(key) + '=' + encodeURIComponent(String(raw))
+      );
+    });
+
+    const viewerId = getViewerId();
+    const n = Number(viewerId);
+    if (Number.isInteger(n) && n > 0) {
+      pairs.push('viewerId=' + encodeURIComponent(String(n)));
+      const nick = displayNickname();
+      if (nick) {
+        pairs.push('nickname=' + encodeURIComponent(nick));
+      }
+    }
+
+    let src = base + '/watch/' + encodeURIComponent(id);
+    if (pairs.length) {
+      src += '?' + pairs.join('&');
+    }
     this.setData({ src: src });
     wx.setNavigationBarTitle({ title: '观看直播' });
   },
