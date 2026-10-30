@@ -4,8 +4,8 @@ const { getLiveWebBaseURL } = require('../../config/env');
 
 /**
  * 嵌套观众端 H5（live-web）观看页：
- * `{liveWebBaseURL}/watch/{id}?viewerId=…&nickname=…`（及既有 invite `c=` 等）。
- * 身份与展示昵称靠 query 传给 H5（不 postMessage、H5 不必再调 user-info）。
+ * `{liveWebBaseURL}/watch/{id}?viewerId=…&nickname=…&viewerAccessToken=…`（及既有 invite `c=` 等）。
+ * 身份 / JWT / 展示昵称靠 query 传给 H5（不 postMessage；H5 落 localStorage 后可调 replay/start）。
  * 业务域名须在公众平台配置；local 开发者工具勾选不校验合法域名。
  */
 Page({
@@ -14,7 +14,8 @@ Page({
   },
 
   onLoad(query) {
-    if (!getAccessToken()) {
+    const accessToken = getAccessToken();
+    if (!accessToken) {
       wx.reLaunch({ url: '/pages/login/login' });
       return;
     }
@@ -31,7 +32,15 @@ Page({
 
     const pairs = [];
     Object.keys(query || {}).forEach((key) => {
-      if (key === 'id' || key === 'viewerId' || key === 'nickname') return;
+      if (
+        key === 'id' ||
+        key === 'viewerId' ||
+        key === 'nickname' ||
+        key === 'viewerAccessToken' ||
+        key === 'accessToken'
+      ) {
+        return;
+      }
       const raw = query[key];
       if (raw == null || raw === '') return;
       pairs.push(
@@ -48,6 +57,10 @@ Page({
         pairs.push('nickname=' + encodeURIComponent(nick));
       }
     }
+    // H5 与小程序 storage 隔离；回放统计等需 Authorization 的接口依赖此注入
+    pairs.push(
+      'viewerAccessToken=' + encodeURIComponent(String(accessToken))
+    );
 
     let src = base + '/watch/' + encodeURIComponent(id);
     if (pairs.length) {
