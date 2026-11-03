@@ -1,0 +1,101 @@
+<view class="page">
+  <view wx:if="{{loading}}" class="state">加载中…</view>
+  <view wx:elif="{{loadError}}" class="state">{{loadError}}</view>
+
+  <block wx:else>
+    <view wx:if="{{!isArticle}}" class="head">
+      <text class="head-title">{{title}}</text>
+    </view>
+
+    <!-- 图片 -->
+    <view wx:if="{{isImage}}" class="body body-center">
+      <block wx:if="{{materialUrl}}">
+        <image
+          class="lesson-image"
+          src="{{materialUrl}}"
+          mode="widthFix"
+          bindtap="onPreviewImage"
+        />
+        <text class="hint-muted">点击图片可放大查看</text>
+        <view class="actions actions-single">
+          <button class="btn" bindtap="onDownloadImage">下载</button>
+        </view>
+      </block>
+      <view wx:else class="state">暂无图片</view>
+    </view>
+
+    <!-- 视频 -->
+    <view wx:elif="{{isVideo}}" class="body body-center">
+      <video
+        wx:if="{{materialUrl}}"
+        class="lesson-video"
+        src="{{materialUrl}}"
+        controls
+        show-center-play-btn
+        enable-play-gesture
+        bindtimeupdate="onVideoTimeUpdate"
+        bindended="onVideoEnded"
+      />
+      <view wx:else class="state">暂无视频</view>
+    </view>
+
+    <!-- 文档 -->
+    <view wx:elif="{{isDocument}}" class="body">
+      <view wx:if="{{!materialUrl}}" class="state">暂无文档</view>
+      <block wx:else>
+        <view class="doc-card">
+          <view class="doc-icon">
+            <image
+              class="doc-icon-img"
+              src="{{docIconSrc}}"
+              mode="aspectFit"
+            />
+          </view>
+          <view class="doc-meta">
+            <text class="doc-name">{{docFileName}}</text>
+            <text class="doc-type">{{docExtLabel}} 文件</text>
+          </view>
+        </view>
+        <view class="actions">
+          <button
+            class="btn btn-primary"
+            data-mode="preview"
+            bindtap="onOpenDocument"
+          >预览</button>
+          <button
+            class="btn"
+            data-mode="download"
+            bindtap="onOpenDocument"
+          >下载</button>
+        </view>
+      </block>
+    </view>
+
+    <!-- 文章 -->
+    <scroll-view
+      wx:elif="{{isArticle}}"
+      class="article-scroll"
+      scroll-y
+      enhanced
+      show-scrollbar="{{false}}"
+      bindscroll="onArticleScroll"
+    >
+      <view class="article-inner">
+        <view class="article-meta">
+          <text class="article-title">{{articleTitle}}</text>
+          <text wx:if="{{author}}" class="article-author">作者：{{author}}</text>
+        </view>
+        <rich-text wx:if="{{articleHtml}}" class="article-html" nodes="{{articleHtml}}" />
+        <view wx:else class="state">暂无正文</view>
+      </view>
+    </scroll-view>
+
+    <!-- 其它类型兜底 -->
+    <view wx:else class="body">
+      <view class="head">
+        <text class="head-title">{{title}}</text>
+      </view>
+      <view class="state">暂不支持该小节类型</view>
+    </view>
+  </block>
+</view>

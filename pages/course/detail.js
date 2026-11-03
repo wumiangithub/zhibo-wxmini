@@ -1,4 +1,5 @@
 const { getAccessToken } = require('../../utils/auth');
+const { getLessonOpenMode } = require('../../config/env');
 const {
   getLearningCourseDetail,
   NODE_CHAPTER,
@@ -15,7 +16,8 @@ const SUB_GAP_RPX = 24;
 const SUB_PAD_RPX = 56;
 
 /**
- * 我的学习 · 课程详情：封面 / 目录 / 介绍；直播小节进观看 webview。
+ * 我的学习 · 课程详情：封面 / 目录 / 介绍。
+ * 小节入口由 config/env `lessonOpenMode` 控制：native 原生页 / webview 嵌 H5。
  */
 Page({
   data: {
@@ -234,13 +236,18 @@ Page({
       wx.showToast({ title: '缺少小节信息', icon: 'none' });
       return;
     }
-    wx.navigateTo({
-      url:
-        '/pages/webview/course-lesson?courseId=' +
-        encodeURIComponent(this._courseId) +
-        '&lessonNodeId=' +
-        encodeURIComponent(String(lessonId)),
-    });
+    const q =
+      'courseId=' +
+      encodeURIComponent(this._courseId) +
+      '&lessonNodeId=' +
+      encodeURIComponent(String(lessonId));
+    // native（默认）→ 原生小节；webview → 保留嵌 H5，后期改 env 即可切换
+    const mode = getLessonOpenMode();
+    const path =
+      mode === 'webview'
+        ? '/pages/webview/course-lesson?'
+        : '/pages/course/lesson?';
+    wx.navigateTo({ url: path + q });
   },
 
   _load() {

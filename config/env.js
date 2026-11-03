@@ -28,6 +28,11 @@
  *
  * liveWebBaseURL：观众端 H5（live-web）根地址（无尾斜杠）。「我的学习」点直播用
  * web-view 打开 `{liveWebBaseURL}/watch/{id}`。local 默认 http://127.0.0.1:5174。
+ *
+ * lessonOpenMode：仅控制「小程序目录点小节」走原生还是嵌 H5（独立浏览器 H5 始终可用，无此开关）
+ * - native：`pages/course/lesson`（图/视频/文档/文章）；直播仍 `pages/webview/watch`
+ * - webview：`pages/webview/course-lesson` 嵌 live-web
+ * 后期切换：改各环境该字段即可。
  */
 
 /** @type {null | 'local' | 'test' | 'prod'} 有值时覆盖微信 envVersion */
@@ -61,6 +66,11 @@ const ENV_CONFIG = {
     orderCenterBaseURL: 'http://oms-api.scqkxx.com',
     /** 观众端 H5（live-web） */
     liveWebBaseURL: 'http://127.0.0.1:5174',
+    /**
+     * 课程小节打开：native | webview
+     * @type {'native' | 'webview'}
+     */
+    lessonOpenMode: 'native',
   },
   /** 体验版 / 测试环境 */
   test: {
@@ -78,6 +88,8 @@ const ENV_CONFIG = {
     orderCenterBaseURL: 'http://oms-api.scqkxx.com',
     // PLACEHOLDER：观众端 H5 HTTPS（须配小程序业务域名）
     liveWebBaseURL: '',
+    /** @type {'native' | 'webview'} */
+    lessonOpenMode: 'native',
   },
   /** 正式版 / 生产环境 */
   prod: {
@@ -95,6 +107,8 @@ const ENV_CONFIG = {
     orderCenterBaseURL: '',
     // PLACEHOLDER：观众端 H5 HTTPS（须配小程序业务域名）
     liveWebBaseURL: '',
+    /** @type {'native' | 'webview'} */
+    lessonOpenMode: 'native',
   },
 };
 
@@ -194,6 +208,14 @@ function getLiveWebBaseURL() {
   return String(raw).replace(/\/$/, '');
 }
 
+/**
+ * 课程小节打开方式：native（默认）| webview。
+ * @returns {'native' | 'webview'}
+ */
+function getLessonOpenMode() {
+  return getEnvConfig().lessonOpenMode === 'webview' ? 'webview' : 'native';
+}
+
 module.exports = {
   FORCE_ENV,
   CURRENT_ENV,
@@ -206,4 +228,5 @@ module.exports = {
   getAvatarUploadMode,
   getOrderCenterBaseURL,
   getLiveWebBaseURL,
+  getLessonOpenMode,
 };

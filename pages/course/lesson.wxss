@@ -1,0 +1,188 @@
+.page {
+  min-height: 100vh;
+  background: #ffffff;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.state {
+  padding: 96rpx 40rpx;
+  text-align: center;
+  color: #8c8c8c;
+  font-size: 28rpx;
+}
+
+.body {
+  flex: 1;
+  padding: 32rpx 40rpx 64rpx;
+  box-sizing: border-box;
+}
+
+.body-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.head {
+  padding: 32rpx 40rpx 16rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.head-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #111111;
+  line-height: 1.4;
+}
+
+.lesson-image {
+  width: 100%;
+  border-radius: 16rpx;
+}
+
+.hint-muted {
+  margin-top: 24rpx;
+  font-size: 26rpx;
+  color: #8c8c8c;
+  text-align: center;
+}
+
+.lesson-video {
+  width: 100%;
+  max-height: 70vh;
+  background: #000000;
+  border-radius: 16rpx;
+}
+
+.doc-card {
+  display: flex;
+  align-items: center;
+  gap: 32rpx;
+  padding: 40rpx;
+  border-radius: 24rpx;
+  background: #f7f8fa;
+  border: 1rpx solid #f0f0f0;
+}
+
+.doc-icon {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 20rpx;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.doc-icon-img {
+  width: 96rpx;
+  height: 96rpx;
+}
+
+.doc-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.doc-name {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #111111;
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+.doc-type {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: #8c8c8c;
+}
+
+.actions {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 40rpx;
+  width: 100%;
+}
+
+.actions-single {
+  max-width: 400rpx;
+}
+
+.btn {
+  flex: 1;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 16rpx;
+  border: 1rpx solid #d9d9d9;
+  background: #ffffff;
+  color: #262626;
+  font-size: 30rpx;
+  padding: 0;
+  margin: 0;
+}
+
+.btn::after {
+  border: none;
+}
+
+.btn-primary {
+  background: #1677ff;
+  border-color: #1677ff;
+  color: #ffffff;
+}
+
+.article-scroll {
+  flex: 1;
+  height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.article-inner {
+  padding: 40rpx 40rpx 64rpx;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.article-meta {
+  margin: 0 0 40rpx;
+  padding: 0 0 32rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.article-title {
+  display: block;
+  font-size: 44rpx;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #111111;
+}
+
+.article-author {
+  display: block;
+  margin-top: 24rpx;
+  font-size: 28rpx;
+  line-height: 1.4;
+  color: #8c8c8c;
+}
+
+.article-html {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  font-size: 30rpx;
+  line-height: 1.75;
+  color: #262626;
+  word-break: break-word;
+}

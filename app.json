@@ -12,6 +12,7 @@
     "pages/orders/list",
     "pages/learning/learning",
     "pages/course/detail",
+    "pages/course/lesson",
     "pages/webview/watch",
     "pages/webview/course-lesson",
     "pages/file/open",
