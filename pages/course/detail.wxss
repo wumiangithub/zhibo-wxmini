@@ -1,0 +1,336 @@
+.page {
+  min-height: 100vh;
+  background: #ffffff;
+  box-sizing: border-box;
+  padding-bottom: 48rpx;
+}
+
+.state {
+  padding: 160rpx 32rpx;
+  text-align: center;
+  color: #bfbfbf;
+  font-size: 28rpx;
+}
+
+.hero {
+  position: relative;
+  width: 100%;
+  height: 420rpx;
+  background: #e6f0ff;
+  overflow: hidden;
+}
+
+.hero-cover {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.hero-mask {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 160rpx;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.55));
+}
+
+.hero-validity {
+  position: absolute;
+  left: 24rpx;
+  bottom: 24rpx;
+  color: #ffffff;
+  font-size: 24rpx;
+  line-height: 34rpx;
+  z-index: 1;
+}
+
+.hero-badge {
+  position: absolute;
+  right: 24rpx;
+  bottom: 24rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 6rpx;
+  background: rgba(0, 0, 0, 0.55);
+  color: #ffffff;
+  font-size: 22rpx;
+  line-height: 32rpx;
+  z-index: 1;
+}
+
+.tabs {
+  display: flex;
+  height: 88rpx;
+  padding: 0 48rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.tab {
+  position: relative;
+  margin-right: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  color: #595959;
+  height: 88rpx;
+}
+
+.tab.active {
+  color: #1677ff;
+  font-weight: 600;
+}
+
+.tab-line {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 48rpx;
+  height: 6rpx;
+  border-radius: 6rpx;
+  background: #1677ff;
+}
+
+.panel {
+  padding: 24rpx 0 40rpx;
+}
+
+.sub-row {
+  position: relative;
+}
+
+.sub-scroll {
+  width: 100%;
+  height: 210rpx;
+  white-space: nowrap;
+}
+
+.sub-track {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0 56rpx;
+  box-sizing: border-box;
+}
+
+.sub-card-wrap {
+  position: relative;
+  width: 528rpx;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+  padding-bottom: 16rpx;
+  box-sizing: border-box;
+}
+
+.sub-card-wrap:last-child {
+  margin-right: 0;
+}
+
+/* 边框画在无灰底的外框上：未选中透明，选中灰色 */
+.sub-card-frame {
+  width: 520rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-sizing: content-box;
+  border: 4rpx solid transparent;
+}
+
+.sub-card-wrap.selected .sub-card-frame {
+  border-color: #a9a9a9;
+  /* 与边框同色，避免圆角内侧透出白缝 */
+  background: #a9a9a9;
+}
+
+.sub-card {
+  display: flex;
+  flex-direction: row;
+  width: 520rpx;
+  height: 180rpx;
+  overflow: hidden;
+  background: #a9a9a9;
+  white-space: normal;
+  border: none;
+}
+
+.sub-card-info {
+  flex: 1;
+  min-width: 0;
+  padding: 28rpx 24rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  white-space: normal;
+}
+
+.sub-card-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.4;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.sub-card-meta {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* 左侧图固定 16:9（320×180） */
+.sub-card-cover {
+  width: 320rpx;
+  height: 180rpx;
+  flex-shrink: 0;
+  display: block;
+  background: #e8eef2;
+}
+
+.sub-tip {
+  position: absolute;
+  /* 上边框 4 + 卡片 180，贴底略上移消缝 */
+  left: 414rpx;
+  top: 184rpx;
+  margin-top: -2rpx;
+  width: 0;
+  height: 0;
+  border-left: 14rpx solid transparent;
+  border-right: 14rpx solid transparent;
+  border-top: 16rpx solid #a9a9a9;
+}
+
+.sub-nav {
+  position: absolute;
+  top: 66rpx;
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.sub-nav-left {
+  left: 12rpx;
+}
+
+.sub-nav-right {
+  right: 12rpx;
+}
+
+.sub-nav.disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.sub-nav-icon {
+  width: 36rpx;
+  height: 36rpx;
+}
+
+.chapter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 24rpx 8rpx;
+  padding: 24rpx 28rpx;
+  border-radius: 12rpx;
+  background: #f5f5f5;
+}
+
+.chapter-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  margin-right: 16rpx;
+  overflow: hidden;
+}
+
+.chapter-title {
+  font-size: 28rpx;
+  color: #333333;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 70%;
+}
+
+.chapter-count {
+  flex-shrink: 0;
+  margin-left: 8rpx;
+  font-size: 24rpx;
+  color: #999999;
+  font-weight: 400;
+}
+
+.chapter-arrow {
+  width: 28rpx;
+  height: 28rpx;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.chapter-arrow.collapsed {
+  transform: rotate(-90deg);
+}
+
+.lesson {
+  padding: 24rpx 32rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.lesson-title {
+  font-size: 28rpx;
+  color: #111111;
+  line-height: 1.45;
+}
+
+.lesson-meta {
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: #8c8c8c;
+}
+
+.empty-catalog {
+  padding: 80rpx 32rpx;
+  text-align: center;
+  color: #bfbfbf;
+  font-size: 26rpx;
+}
+
+.intro-panel {
+  padding: 32rpx 32rpx 48rpx;
+}
+
+.intro-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #111111;
+  line-height: 1.45;
+  margin-bottom: 20rpx;
+}
+
+.intro-text {
+  font-size: 28rpx;
+  color: #595959;
+  line-height: 1.7;
+  margin-bottom: 28rpx;
+}
+
+.intro-html {
+  font-size: 28rpx;
+  color: #262626;
+  line-height: 1.75;
+  word-break: break-word;
+}

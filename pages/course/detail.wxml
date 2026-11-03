@@ -1,0 +1,140 @@
+<view class="page">
+  <view wx:if="{{loading}}" class="state">加载中…</view>
+  <view wx:elif="{{loadError}}" class="state">{{loadError}}</view>
+
+  <block wx:else>
+    <view class="hero">
+      <image class="hero-cover" src="{{cover}}" mode="aspectFill"></image>
+      <view class="hero-mask"></view>
+      <view wx:if="{{validityLabel}}" class="hero-validity">有效期: {{validityLabel}}</view>
+      <view class="hero-badge">课程</view>
+    </view>
+
+    <view class="tabs">
+      <view
+        class="tab {{activeTab === 'catalog' ? 'active' : ''}}"
+        data-tab="catalog"
+        bindtap="onSwitchTab"
+      >
+        <text>目录</text>
+        <view wx:if="{{activeTab === 'catalog'}}" class="tab-line"></view>
+      </view>
+      <view
+        class="tab {{activeTab === 'intro' ? 'active' : ''}}"
+        data-tab="intro"
+        bindtap="onSwitchTab"
+      >
+        <text>介绍</text>
+        <view wx:if="{{activeTab === 'intro'}}" class="tab-line"></view>
+      </view>
+    </view>
+
+    <!-- 目录 -->
+    <view wx:if="{{activeTab === 'catalog'}}" class="panel">
+      <view wx:if="{{hasSubCourses}}" class="sub-row">
+        <scroll-view
+          class="sub-scroll"
+          scroll-x
+          enable-flex
+          scroll-with-animation
+          scroll-left="{{subScrollLeft}}"
+          bindscroll="onSubScroll"
+        >
+          <view class="sub-track">
+            <view
+              wx:for="{{subCourses}}"
+              wx:key="id"
+              class="sub-card-wrap {{selectedSubId === item.id ? 'selected' : ''}}"
+              data-id="{{item.id}}"
+              bindtap="onSelectSub"
+            >
+              <view class="sub-card-frame">
+                <view class="sub-card">
+                  <image
+                    class="sub-card-cover"
+                    src="{{item.coverUrl || cover}}"
+                    mode="aspectFill"
+                  ></image>
+                  <view class="sub-card-info">
+                    <view class="sub-card-title">{{item.title}}</view>
+                    <view class="sub-card-meta">共 {{item.lessonCount}} 小节</view>
+                  </view>
+                </view>
+              </view>
+              <view wx:if="{{selectedSubId === item.id}}" class="sub-tip"></view>
+            </view>
+          </view>
+        </scroll-view>
+
+        <view
+          wx:if="{{canScrollLeft}}"
+          class="sub-nav sub-nav-left"
+          catchtap="onSubArrowLeft"
+        >
+          <image class="sub-nav-icon" src="/images/icon-arrow-left.png" mode="aspectFit"></image>
+        </view>
+        <view
+          wx:if="{{canScrollRight}}"
+          class="sub-nav sub-nav-right"
+          catchtap="onSubArrowRight"
+        >
+          <image class="sub-nav-icon" src="/images/icon-arrow-right.png" mode="aspectFit"></image>
+        </view>
+      </view>
+
+      <view wx:if="{{!catalogBlocks.length}}" class="empty-catalog">暂无目录</view>
+
+      <block wx:for="{{catalogBlocks}}" wx:key="id">
+        <!-- 章节灰条 -->
+        <view
+          wx:if="{{item.type === 'chapter'}}"
+          class="chapter"
+          data-id="{{item.id}}"
+          bindtap="onToggleChapter"
+        >
+          <view class="chapter-main">
+            <text class="chapter-title">{{item.title}}</text>
+            <text class="chapter-count">({{item.lessonCount}}小节)</text>
+          </view>
+          <image
+            class="chapter-arrow {{item.expanded ? '' : 'collapsed'}}"
+            src="/images/icon-arrow-down.png"
+            mode="aspectFit"
+          ></image>
+        </view>
+        <block wx:if="{{item.type === 'chapter' && item.expanded}}">
+          <view
+            wx:for="{{item.lessons}}"
+            wx:for-item="lesson"
+            wx:key="id"
+            class="lesson"
+            data-id="{{lesson.id}}"
+            bindtap="onTapLesson"
+          >
+            <view class="lesson-title">{{lesson.indexLabel}}. {{lesson.title}}</view>
+            <view class="lesson-meta">{{lesson.metaLine}}</view>
+          </view>
+        </block>
+
+        <!-- 根下直接小节 -->
+        <view
+          wx:if="{{item.type === 'lesson'}}"
+          class="lesson"
+          data-id="{{item.id}}"
+          bindtap="onTapLesson"
+        >
+          <view class="lesson-title">{{item.indexLabel}}. {{item.title}}</view>
+          <view class="lesson-meta">{{item.metaLine}}</view>
+        </view>
+      </block>
+    </view>
+
+    <!-- 介绍 -->
+    <view wx:else class="panel intro-panel">
+      <view class="intro-title">{{title}}</view>
+      <view wx:if="{{introduction}}" class="intro-text">{{introduction}}</view>
+      <rich-text wx:if="{{detailHtml}}" class="intro-html" nodes="{{detailHtml}}"></rich-text>
+      <view wx:elif="{{!introduction}}" class="empty-catalog">暂无介绍</view>
+    </view>
+  </block>
+</view>

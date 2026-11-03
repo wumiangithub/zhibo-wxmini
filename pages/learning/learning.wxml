@@ -57,7 +57,6 @@
         </view>
       </view>
     </view>
-    <view wx:if="{{noMore && list.length && activeTab === 'live'}}" class="hint">没有更多了</view>
-    <view wx:elif="{{activeTab === 'course'}}" class="hint">课程列表暂为预览</view>
+    <view wx:if="{{noMore && list.length}}" class="hint">没有更多了</view>
   </scroll-view>
 </view>

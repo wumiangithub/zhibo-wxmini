@@ -1,6 +1,5 @@
 const { getAccessToken } = require('../../utils/auth');
-const { filterLearning } = require('../../utils/mockLearning');
-const { listLearningLives } = require('../../api/live/learning');
+const { listLearningLives, listLearningCourses } = require('../../api/live/learning');
 const { watchStateLabel, isLivingState } = require('../../api/live/watch');
 
 /** 每页条数 */
@@ -9,8 +8,8 @@ const PAGE_SIZE = 20;
 const DEFAULT_COVER = '/images/cover-live-1.png';
 
 /**
- * 我的学习：直播 Tab 拉 GET /viewer/learning/lives（仅有观看权益场次），
- * 点进 web-view 嵌 live-web `/watch/:id`；课程 Tab 暂 mock。
+ * 我的学习：直播 / 课程 Tab 分别拉 learning/lives、learning/courses（仅有权益）。
+ * 直播点进 web-view 嵌 live-web `/watch/:id`；课程进 course/detail。
  */
 Page({
   data: {
@@ -36,20 +35,19 @@ Page({
   },
 
   onReachBottom() {
-    if (this.data.activeTab !== 'live') return;
     if (this.data.loading || this.data.noMore) return;
-    this._loadMoreLive();
+    if (this.data.activeTab === 'live') {
+      this._loadMoreLive();
+      return;
+    }
+    this._loadMoreCourse();
   },
 
   refreshList() {
-    if (this.data.activeTab === 'live') {
-      return this._reloadLive();
+    if (this.data.activeTab === 'course') {
+      return this._reloadCourse();
     }
-    const list = filterLearning('course', this.data.keyword).map((item) =>
-      Object.assign({}, item, { kind: 'course' })
-    );
-    this.setData({ list: list, loading: false, noMore: true, page: 1 });
-    return Promise.resolve();
+    return this._reloadLive();
   },
 
   onSwitchTab(e) {
@@ -69,12 +67,17 @@ Page({
   onTapItem(e) {
     const id = e.currentTarget.dataset.id;
     const kind = e.currentTarget.dataset.kind;
-    if (kind === 'course') {
-      wx.showToast({ title: '课程详情待接入', icon: 'none' });
+    if (!id) {
+      wx.showToast({
+        title: kind === 'course' ? '缺少课程 id' : '缺少直播 id',
+        icon: 'none',
+      });
       return;
     }
-    if (!id) {
-      wx.showToast({ title: '缺少直播 id', icon: 'none' });
+    if (kind === 'course') {
+      wx.navigateTo({
+        url: '/pages/course/detail?id=' + encodeURIComponent(id),
+      });
       return;
     }
     wx.navigateTo({
@@ -89,6 +92,15 @@ Page({
 
   _loadMoreLive() {
     return this._fetchLive(this.data.page + 1, false);
+  },
+
+  _reloadCourse() {
+    this.setData({ page: 1, noMore: false, list: [] });
+    return this._fetchCourse(1, true);
+  },
+
+  _loadMoreCourse() {
+    return this._fetchCourse(this.data.page + 1, false);
   },
 
   /**
@@ -109,11 +121,42 @@ Page({
         }
         const list = replace ? rows : this.data.list.concat(rows);
         const rawLen = ((data && data.list) || []).length;
-        const noMore = rawLen < PAGE_SIZE;
         this.setData({
           list: list,
           page: page,
-          noMore: noMore,
+          noMore: rawLen < PAGE_SIZE,
+        });
+      })
+      .catch(() => {
+        /* toast 已在 request */
+      })
+      .finally(() => {
+        this.setData({ loading: false });
+      });
+  },
+
+  /**
+   * @param {number} page
+   * @param {boolean} replace
+   */
+  _fetchCourse(page, replace) {
+    if (this.data.loading) return Promise.resolve();
+    this.setData({ loading: true });
+    return listLearningCourses({ page: page, pageSize: PAGE_SIZE })
+      .then((data) => {
+        const kw = (this.data.keyword || '').trim();
+        let rows = ((data && data.list) || []).map((item) => this._toCourseView(item));
+        if (kw) {
+          rows = rows.filter(function (item) {
+            return (item.title || '').indexOf(kw) !== -1;
+          });
+        }
+        const list = replace ? rows : this.data.list.concat(rows);
+        const rawLen = ((data && data.list) || []).length;
+        this.setData({
+          list: list,
+          page: page,
+          noMore: rawLen < PAGE_SIZE,
         });
       })
       .catch(() => {
@@ -140,5 +183,33 @@ Page({
       statusText: watchStateLabel(item.state) || '已结束',
       time: item.startTime || '',
     };
+  },
+
+  /**
+   * @param {object} item
+   * @returns {object}
+   */
+  _toCourseView(item) {
+    const sub = item.subCourseCount != null ? Number(item.subCourseCount) : 0;
+    const lessons = item.lessonCount != null ? Number(item.lessonCount) : 0;
+    return {
+      id: item.id,
+      kind: 'course',
+      title: item.title || '课程',
+      cover: item.coverUrl || DEFAULT_COVER,
+      coverTag: '课程',
+      subTitle: sub + '个子课程 ' + lessons + '小节',
+      time: this._shortTime(item.acquiredTime),
+    };
+  },
+
+  /**
+   * @param {string} raw
+   * @returns {string}
+   */
+  _shortTime(raw) {
+    const s = raw != null ? String(raw).trim() : '';
+    if (!s) return '';
+    return s.length >= 16 ? s.slice(0, 16) : s;
   },
 });
