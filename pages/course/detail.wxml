@@ -109,6 +109,7 @@
             wx:key="id"
             class="lesson"
             data-id="{{lesson.id}}"
+            data-kind="{{lesson.contentKind}}"
             bindtap="onTapLesson"
           >
             <view class="lesson-title">{{lesson.indexLabel}}. {{lesson.title}}</view>
@@ -121,6 +122,7 @@
           wx:if="{{item.type === 'lesson'}}"
           class="lesson"
           data-id="{{item.id}}"
+          data-kind="{{item.contentKind}}"
           bindtap="onTapLesson"
         >
           <view class="lesson-title">{{item.indexLabel}}. {{item.title}}</view>

@@ -17,7 +17,7 @@ const SUB_PAD_RPX = 56;
 
 /**
  * 我的学习 · 课程详情：封面 / 目录 / 介绍。
- * 小节入口由 config/env `lessonOpenMode` 控制：native 原生页 / webview 嵌 H5。
+ * 小节入口由 config/env `lessonOpenByKind` 按 contentKind 决定：native 原生页 / webview 嵌 H5。
  */
 Page({
   data: {
@@ -241,8 +241,7 @@ Page({
       encodeURIComponent(this._courseId) +
       '&lessonNodeId=' +
       encodeURIComponent(String(lessonId));
-    // native（默认）→ 原生小节；webview → 保留嵌 H5，后期改 env 即可切换
-    const mode = getLessonOpenMode();
+    const mode = getLessonOpenMode(e.currentTarget.dataset.kind);
     const path =
       mode === 'webview'
         ? '/pages/webview/course-lesson?'

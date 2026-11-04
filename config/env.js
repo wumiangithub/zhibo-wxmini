@@ -29,10 +29,12 @@
  * liveWebBaseURL：观众端 H5（live-web）根地址（无尾斜杠）。「我的学习」点直播用
  * web-view 打开 `{liveWebBaseURL}/watch/{id}`。local 默认 http://127.0.0.1:5174。
  *
- * lessonOpenMode：仅控制「小程序目录点小节」走原生还是嵌 H5（独立浏览器 H5 始终可用，无此开关）
- * - native：`pages/course/lesson`（图/视频/文档/文章）；直播仍 `pages/webview/watch`
- * - webview：`pages/webview/course-lesson` 嵌 live-web
- * 后期切换：改各环境该字段即可。
+ * lessonOpenByKind：按小节类型决定「小程序目录点小节」走原生还是嵌 H5。
+ * 键：live 直播 / image 图片 / video 视频 / document 文档 / article 文章。
+ * 值：'native' | 'webview'。未写的类型回落 native。独立浏览器 H5 始终可用，无此开关。
+ * - native：`pages/course/lesson`。直播进该页后仍跳 `pages/webview/watch`。
+ * - webview：`pages/webview/course-lesson` 嵌 live-web。
+ * 默认：文章 webview（富文本按浏览器排版，图片尺寸与小节预览一致），其余 native。
  */
 
 /** @type {null | 'local' | 'test' | 'prod'} 有值时覆盖微信 envVersion */
@@ -67,10 +69,16 @@ const ENV_CONFIG = {
     /** 观众端 H5（live-web） */
     liveWebBaseURL: 'http://127.0.0.1:5174',
     /**
-     * 课程小节打开：native | webview
-     * @type {'native' | 'webview'}
+     * 按小节类型打开：native 原生页 / webview 嵌 H5。
+     * @type {{ live: 'native' | 'webview', image: 'native' | 'webview', video: 'native' | 'webview', document: 'native' | 'webview', article: 'native' | 'webview' }}
      */
-    lessonOpenMode: 'native',
+    lessonOpenByKind: {
+      live: 'native',
+      image: 'native',
+      video: 'native',
+      document: 'native',
+      article: 'webview',
+    },
   },
   /** 体验版 / 测试环境 */
   test: {
@@ -88,8 +96,14 @@ const ENV_CONFIG = {
     orderCenterBaseURL: 'http://oms-api.scqkxx.com',
     // PLACEHOLDER：观众端 H5 HTTPS（须配小程序业务域名）
     liveWebBaseURL: '',
-    /** @type {'native' | 'webview'} */
-    lessonOpenMode: 'native',
+    /** @type {{ live: 'native' | 'webview', image: 'native' | 'webview', video: 'native' | 'webview', document: 'native' | 'webview', article: 'native' | 'webview' }} */
+    lessonOpenByKind: {
+      live: 'native',
+      image: 'native',
+      video: 'native',
+      document: 'native',
+      article: 'webview',
+    },
   },
   /** 正式版 / 生产环境 */
   prod: {
@@ -107,8 +121,14 @@ const ENV_CONFIG = {
     orderCenterBaseURL: '',
     // PLACEHOLDER：观众端 H5 HTTPS（须配小程序业务域名）
     liveWebBaseURL: '',
-    /** @type {'native' | 'webview'} */
-    lessonOpenMode: 'native',
+    /** @type {{ live: 'native' | 'webview', image: 'native' | 'webview', video: 'native' | 'webview', document: 'native' | 'webview', article: 'native' | 'webview' }} */
+    lessonOpenByKind: {
+      live: 'native',
+      image: 'native',
+      video: 'native',
+      document: 'native',
+      article: 'webview',
+    },
   },
 };
 
@@ -208,12 +228,25 @@ function getLiveWebBaseURL() {
   return String(raw).replace(/\/$/, '');
 }
 
+/** contentKind → lessonOpenByKind 的键。1 直播 / 2 图片 / 3 视频 / 4 文档 / 5 文章 */
+const LESSON_OPEN_KIND_KEY = {
+  1: 'live',
+  2: 'image',
+  3: 'video',
+  4: 'document',
+  5: 'article',
+};
+
 /**
- * 课程小节打开方式：native（默认）| webview。
+ * 按小节 contentKind 取打开方式。未知类型回落 native。
+ * @param {number|string} contentKind
  * @returns {'native' | 'webview'}
  */
-function getLessonOpenMode() {
-  return getEnvConfig().lessonOpenMode === 'webview' ? 'webview' : 'native';
+function getLessonOpenMode(contentKind) {
+  const key = LESSON_OPEN_KIND_KEY[Number(contentKind)];
+  const byKind = getEnvConfig().lessonOpenByKind || {};
+  const mode = key ? byKind[key] : '';
+  return mode === 'webview' ? 'webview' : 'native';
 }
 
 module.exports = {
