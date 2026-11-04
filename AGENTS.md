@@ -7,7 +7,7 @@
 
 Cursor 做派给「小程序」的待办；Grok bot 做派给「小程序（Grok）」的待办。同一条工单同一时间只一人改。架构、命名、API 在 `../zhibo-shared/docs/`，经常读，日常不要改。
 
-总控 / 副总控可以改你的代码。**不要**改 `zhibo-backend`、`zhibo-frontend`、`zhibo-shared`，不要打开父目录 `zhibo` 当工作区。本窗口不是副总控，禁止使用 `[lead-grok]`。
+总控 / 副总控可以改你的代码。运维（Grok，D102）只改本仓里的 nginx / 发布 / 环境配置，不改业务代码。**不要**改 `zhibo-backend`、`zhibo-frontend`、`zhibo-shared`，不要打开父目录 `zhibo` 当工作区。本窗口不是副总控，禁止使用 `[lead-grok]`。
 
 进度写在本仓 `docs/进度.md`（没有就新建）。缺接口记在进度的阻塞项，由总控补契约或下给后端，不要自己改别的仓。
 
