@@ -7,8 +7,37 @@ const { getMiniOpenid } = require('../../utils/auth');
 
 /** 订单状态：待支付（对方 order_stats） */
 const ORDER_STATUS_UNPAID = 1010;
-/** 订单状态：已支付 / 已付款 */
+/** 订单状态：部分支付 */
+const ORDER_STATUS_PARTIAL_PAID = 1020;
+/** 订单状态：已支付 */
 const ORDER_STATUS_PAID = 1030;
+/** 订单状态：撞单 */
+const ORDER_STATUS_CONFLICT = 1040;
+/** 订单状态：已签约 */
+const ORDER_STATUS_SIGNED = 1050;
+/** 订单状态：已取消 */
+const ORDER_STATUS_CANCELLED = 1060;
+/** 订单状态：分期退款中 */
+const ORDER_STATUS_INSTALLMENT_REFUNDING = 1070;
+/** 订单状态：退款中 */
+const ORDER_STATUS_REFUNDING = 1071;
+/** 订单状态：部分退款 */
+const ORDER_STATUS_PARTIAL_REFUND = 1080;
+/** 订单状态：已退款 */
+const ORDER_STATUS_REFUNDED = 1081;
+
+const ORDER_STATUS_LABELS = {
+  [ORDER_STATUS_UNPAID]: '待支付',
+  [ORDER_STATUS_PARTIAL_PAID]: '部分支付',
+  [ORDER_STATUS_PAID]: '已支付',
+  [ORDER_STATUS_CONFLICT]: '撞单',
+  [ORDER_STATUS_SIGNED]: '已签约',
+  [ORDER_STATUS_CANCELLED]: '已取消',
+  [ORDER_STATUS_INSTALLMENT_REFUNDING]: '分期退款中',
+  [ORDER_STATUS_REFUNDING]: '退款中',
+  [ORDER_STATUS_PARTIAL_REFUND]: '部分退款',
+  [ORDER_STATUS_REFUNDED]: '已退款',
+};
 
 /** prepay payMethod：单笔 */
 const PREPAY_METHOD_SINGLE = 1;
@@ -57,6 +86,8 @@ function normalizeOrderItem(raw) {
   const r = raw || {};
   const status = Number(r.orderStatus);
   return {
+    /** 订单主键；点进已付款详情传它 */
+    orderId: r.orderId != null ? String(r.orderId) : '',
     orderNo: r.orderNo != null ? String(r.orderNo) : '',
     productName: r.productName != null ? String(r.productName) : '',
     customerAccount: r.customerAccount != null ? String(r.customerAccount) : '',
@@ -78,18 +109,72 @@ function normalizeOrderItem(raw) {
  * @returns {string}
  */
 function orderStatusLabel(status) {
-  if (status === ORDER_STATUS_PAID) return '已付款';
-  if (status === ORDER_STATUS_UNPAID) return '待支付';
-  return status ? '状态' + status : '';
+  if (!status) return '';
+  return ORDER_STATUS_LABELS[status] || '状态' + status;
 }
 
 /**
- * 是否已支付（可进详情）。
+ * 是否已支付。
  * @param {number} status
  * @returns {boolean}
  */
 function isPaidOrder(status) {
   return status === ORDER_STATUS_PAID;
+}
+
+/**
+ * 「全部订单」列表：除待支付(1010)外都展示。
+ * @param {number} status
+ * @returns {boolean}
+ */
+function isListVisibleOrder(status) {
+  return status !== ORDER_STATUS_UNPAID;
+}
+
+/**
+ * 已付款订单详情（我的订单 / 支付完成页）。
+ * POST …/order-center/api/live/viewer/order/paid-info
+ * Body：orderId = 订单主键
+ * @param {string|number} orderId
+ * @returns {Promise<{
+ *   orderNo: string,
+ *   productName: string,
+ *   productImg: string,
+ *   totalDays: number|null,
+ *   orderMoney: string,
+ *   payTime: string,
+ *   payWayText: string,
+ *   paySerialNo: string,
+ *   orderStatus: number|null,
+ *   merchant: string,
+ * }>}
+ */
+function getPaidInfo(orderId) {
+  const id = String(orderId == null ? '' : orderId).trim();
+  if (!id) {
+    return Promise.reject({ msg: '订单无效' });
+  }
+  return orderCenterPost({
+    path: '/order-center/api/live/viewer/order/paid-info',
+    data: { orderId: id },
+    silent: true,
+  }).then((data) => {
+    const r = data || {};
+    const totalDays = Number(r.totalDays);
+    const orderStatus = Number(r.orderStatus);
+    return {
+      orderNo: r.orderNo != null ? String(r.orderNo) : '',
+      productName: typeof r.productName === 'string' ? r.productName.trim() : '',
+      productImg: typeof r.productImg === 'string' ? r.productImg.trim() : '',
+      totalDays: Number.isFinite(totalDays) ? Math.floor(totalDays) : null,
+      orderMoney: r.orderMoney != null ? String(r.orderMoney) : '',
+      payTime: typeof r.payTime === 'string' ? r.payTime : '',
+      payWayText: typeof r.payWayText === 'string' ? r.payWayText : '',
+      paySerialNo: r.paySerialNo != null ? String(r.paySerialNo) : '',
+      orderStatus: Number.isFinite(orderStatus) ? Math.floor(orderStatus) : null,
+      merchant: typeof r.merchant === 'string' ? r.merchant.trim() : '',
+    };
+  });
 }
 
 /**
@@ -283,7 +368,15 @@ function orderCenterErrorMessage(err, fallback) {
 
 module.exports = {
   ORDER_STATUS_UNPAID,
+  ORDER_STATUS_PARTIAL_PAID,
   ORDER_STATUS_PAID,
+  ORDER_STATUS_CONFLICT,
+  ORDER_STATUS_SIGNED,
+  ORDER_STATUS_CANCELLED,
+  ORDER_STATUS_INSTALLMENT_REFUNDING,
+  ORDER_STATUS_REFUNDING,
+  ORDER_STATUS_PARTIAL_REFUND,
+  ORDER_STATUS_REFUNDED,
   PREPAY_METHOD_SINGLE,
   PAY_CHANNEL_WX_LITE,
   PAY_CHANNEL_ALIPAY_WAP,
@@ -292,7 +385,9 @@ module.exports = {
   listMyOrders,
   orderStatusLabel,
   isPaidOrder,
+  isListVisibleOrder,
   normalizeOrderItem,
+  getPaidInfo,
   getPaidDetail,
   resolvePrepayParams,
   prepayOrder,

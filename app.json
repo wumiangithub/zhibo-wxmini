@@ -10,6 +10,7 @@
     "pages/feedback/feedback",
     "pages/feedback/detail",
     "pages/orders/list",
+    "pages/orders/detail",
     "pages/learning/learning",
     "pages/course/detail",
     "pages/course/lesson",

@@ -1,15 +1,14 @@
 <view class="page">
   <view wx:if="{{loading && !list.length}}" class="empty">加载中…</view>
   <view wx:elif="{{!list.length}}" class="empty">
-    <text class="empty-text">暂无已付款订单</text>
+    <text class="empty-text">暂无订单</text>
   </view>
   <view wx:else class="list">
     <view
       class="card"
       wx:for="{{list}}"
-      wx:key="orderNo"
-      data-orderno="{{item.orderNo}}"
-      data-paid="{{item.paid}}"
+      wx:key="orderId"
+      data-orderid="{{item.orderId}}"
       bindtap="onTapItem"
     >
       <view class="card-head">

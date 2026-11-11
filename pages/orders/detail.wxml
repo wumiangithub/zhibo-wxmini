@@ -1,0 +1,36 @@
+<view class="page">
+  <view wx:if="{{loading}}" class="state">加载中…</view>
+  <view wx:elif="{{errorText || !detail}}" class="state">
+    <text class="state-text">{{errorText || '订单不存在'}}</text>
+    <view class="retry" bindtap="onRetry">重试</view>
+  </view>
+  <block wx:else>
+    <view class="product">
+      <image class="cover" src="{{coverSrc}}" mode="aspectFill"></image>
+      <view class="info">
+        <view class="name">{{detail.productName || '商品'}}</view>
+        <view wx:if="{{validityText}}" class="meta">{{validityText}}</view>
+        <view class="price">{{moneyText}}</view>
+      </view>
+    </view>
+
+    <view class="rows">
+      <view class="row">
+        <text class="label">订单编号</text>
+        <text class="value">{{detail.orderNo || '--'}}</text>
+      </view>
+      <view class="row">
+        <text class="label">支付方式</text>
+        <text class="value">{{detail.payWayText || '--'}}</text>
+      </view>
+      <view class="row">
+        <text class="label">支付时间</text>
+        <text class="value">{{detail.payTime || '--'}}</text>
+      </view>
+      <view class="row">
+        <text class="label">支付流水号</text>
+        <text class="value">{{detail.paySerialNo || '--'}}</text>
+      </view>
+    </view>
+  </block>
+</view>
