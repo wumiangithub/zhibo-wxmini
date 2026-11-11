@@ -3,9 +3,13 @@ const { CURRENT_ENV } = require('../../config/env');
 const { saveSession } = require('../../utils/auth');
 
 /**
- * 仅 local：明文手机号登录 / 自动注册（开发造号）。
- * test / prod 进入本页会立刻退回登录页。
+ * local / test：明文手机号登录 / 自动注册（开发与测试造号）。
+ * prod 进入本页会立刻退回登录页。
  */
+function allowDevPhoneLogin() {
+  return CURRENT_ENV === 'local' || CURRENT_ENV === 'test';
+}
+
 Page({
   data: {
     phone: '',
@@ -13,7 +17,7 @@ Page({
   },
 
   onShow() {
-    if (CURRENT_ENV !== 'local') {
+    if (!allowDevPhoneLogin()) {
       wx.reLaunch({ url: '/pages/login/login' });
     }
   },
@@ -32,7 +36,7 @@ Page({
     if (this.data.loading) {
       return;
     }
-    if (CURRENT_ENV !== 'local') {
+    if (!allowDevPhoneLogin()) {
       wx.reLaunch({ url: '/pages/login/login' });
       return;
     }

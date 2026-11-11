@@ -8,8 +8,12 @@ const {
 
 /**
  * 登录页：协议勾选、手机号授权登录、微信登录；已登录则跳转首页。
- * local 额外展示「其他登录方式」→ 明文手机号造号页。
+ * local / test 额外展示「其他登录方式」→ 明文手机号造号页。
  */
+function allowDevPhoneLogin() {
+  return CURRENT_ENV === 'local' || CURRENT_ENV === 'test';
+}
+
 Page({
   data: {
     /** 是否已勾选用户协议与隐私协议 */
@@ -18,8 +22,8 @@ Page({
     loading: false,
     /** 本地缓存的脱敏手机号（展示用） */
     phoneMasked: '',
-    /** 是否展示开发用「其他登录方式」（仅 local） */
-    showDevLogin: CURRENT_ENV === 'local',
+    /** 是否展示「其他登录方式」（local / test） */
+    showDevLogin: allowDevPhoneLogin(),
   },
 
   /**
@@ -29,7 +33,7 @@ Page({
     const phoneMasked = getPhoneMasked();
     this.setData({
       phoneMasked: phoneMasked || '',
-      showDevLogin: CURRENT_ENV === 'local',
+      showDevLogin: allowDevPhoneLogin(),
     });
 
     const access = getAccessToken();
@@ -76,10 +80,10 @@ Page({
   },
 
   /**
-   * 其他登录方式（仅 local）：须已勾选协议，再进明文手机号页。
+   * 其他登录方式（local / test）：须已勾选协议，再进明文手机号页。
    */
   onOtherLogin() {
-    if (CURRENT_ENV !== 'local') {
+    if (!allowDevPhoneLogin()) {
       return;
     }
     if (!this.data.agreed) {
