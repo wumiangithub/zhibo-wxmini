@@ -16,6 +16,8 @@
     "pages/webview/watch",
     "pages/webview/course-lesson",
     "pages/file/open",
+    "pages/pay/checkout",
+    "pages/pay/request",
     "pages/bind-phone/bind-phone",
     "pages/agreement/list/list",
     "pages/agreement/user/user",

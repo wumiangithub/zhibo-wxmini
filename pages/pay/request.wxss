@@ -1,0 +1,15 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48rpx;
+  box-sizing: border-box;
+  background: #ffffff;
+}
+
+.tip {
+  font-size: 28rpx;
+  color: #8c8c8c;
+  text-align: center;
+}

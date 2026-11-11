@@ -1,4 +1,4 @@
-const { getViewerId, getPhoneMasked } = require('./auth');
+const { getViewerUid, getPhoneMasked } = require('./auth');
 const { getProfile } = require('./profile');
 
 /**
@@ -22,7 +22,7 @@ function displayNickname() {
     }
   }
 
-  const id = getViewerId();
+  const id = getViewerUid();
   const n = Number(id);
   if (Number.isInteger(n) && n > 0) {
     return '用户_' + n;

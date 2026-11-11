@@ -57,6 +57,8 @@ function phoneLogin(payload) {
     data: {
       loginCode: p.loginCode,
       phoneCode: p.phoneCode,
+      // 小程序固定 phone；电脑网页用 pc（传给用户中心）
+      type: p.type || 'phone',
       agreed: !!p.agreed,
     },
   });
@@ -78,6 +80,8 @@ function wechatLogin(payload) {
     auth: false,
     data: {
       code: p.code,
+      // 小程序固定 phone；电脑网页用 pc（传给用户中心）
+      type: p.type || 'phone',
       agreed: !!p.agreed,
     },
   });

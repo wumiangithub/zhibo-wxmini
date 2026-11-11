@@ -1,0 +1,116 @@
+<view class="page">
+  <view class="risk-banner">
+    <view class="risk-check">✓</view>
+    <text class="risk-text">{{ riskBannerText }}</text>
+  </view>
+
+  <view class="body">
+    <view wx:if="{{ loading }}" class="state">
+      <view class="spinner"></view>
+      <text class="state-text">加载订单中…</text>
+    </view>
+
+    <view wx:elif="{{ error && !detail }}" class="state">
+      <text class="error">{{ error }}</text>
+      <button class="retry" bindtap="onRetry">重试</button>
+    </view>
+
+    <block wx:elif="{{ detail }}">
+      <view class="card">
+        <view class="product">
+          <image
+            wx:if="{{ coverImg }}"
+            class="cover"
+            src="{{ coverImg }}"
+            mode="aspectFill"
+          />
+          <view wx:else class="cover cover-empty">图</view>
+          <text class="product-name">{{ detail.productName || '商品' }}</text>
+        </view>
+        <view class="kv">
+          <view class="kv-row">
+            <text class="kv-label">订单编号</text>
+            <text class="kv-value">{{ detail.orderNo || '—' }}</text>
+          </view>
+          <view class="kv-row">
+            <text class="kv-label">下单时间</text>
+            <text class="kv-value">{{ detail.createTime || '—' }}</text>
+          </view>
+          <view class="kv-row">
+            <text class="kv-label">应付金额</text>
+            <view class="kv-money">
+              <text class="yen">¥</text>
+              <text class="int">{{ moneyInt }}</text>
+              <text class="dec">.{{ moneyDec }}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="section-label">选择支付方式</view>
+      <view class="card methods">
+        <view class="method" bindtap="onSelectWechat">
+          <view class="method-left">
+            <image
+              class="method-logo"
+              src="/images/pay-wechat.png"
+              mode="aspectFit"
+            />
+            <text class="method-name">微信支付</text>
+          </view>
+          <view class="radio {{ payChannel === 'wechat' ? 'on' : '' }}"></view>
+        </view>
+        <view class="method method-divider" bindtap="onSelectAlipay">
+          <view class="method-left">
+            <image
+              class="method-logo"
+              src="/images/pay-alipay.png"
+              mode="aspectFit"
+            />
+            <text class="method-name">支付宝</text>
+          </view>
+          <view class="radio {{ payChannel === 'alipay' ? 'on' : '' }}"></view>
+        </view>
+      </view>
+
+      <view class="agree" bindtap="onToggleAgree">
+        <view class="agree-box {{ agreed ? 'on' : '' }}"></view>
+        <view class="agree-text">
+          <text>我已阅读并同意：</text>
+          <text class="link" catchtap="onOpenAgreement" data-kind="user">《用户服务协议》</text>
+          <text>、</text>
+          <text class="link" catchtap="onOpenAgreement" data-kind="privacy">《隐私政策》</text>
+          <text>和</text>
+          <text class="link" catchtap="onOpenAgreement" data-kind="risk">《风险提示书》</text>
+        </view>
+      </view>
+
+      <text wx:if="{{ error }}" class="error inline">{{ error }}</text>
+    </block>
+  </view>
+
+  <view wx:if="{{ detail && !loading }}" class="foot">
+    <button
+      class="primary {{ !agreed || prepaying ? 'disabled' : '' }}"
+      disabled="{{ !agreed || prepaying }}"
+      bindtap="onConfirmPay"
+    >
+      {{ prepaying ? '发起支付中…' : '确认支付' }}
+    </button>
+  </view>
+
+  <view
+    wx:if="{{ alipayModalVisible }}"
+    class="modal-mask"
+    catchtouchmove="preventTouchMove"
+  >
+    <view class="modal-panel">
+      <text class="modal-title">支付宝支付</text>
+      <text class="modal-body">微信内无法直接拉起支付宝，请复制支付宝链接后，在手机浏览器中打开完成支付。</text>
+      <view class="modal-actions">
+        <view class="modal-btn cancel" bindtap="onCloseAlipayModal">取消</view>
+        <view class="modal-btn confirm" bindtap="onCopyAlipayLink">复制链接</view>
+      </view>
+    </view>
+  </view>
+</view>

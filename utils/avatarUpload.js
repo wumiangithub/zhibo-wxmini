@@ -56,16 +56,16 @@ function contentTypeOf(ext) {
 
 /**
  * 拼对象键（前缀来自本文件常量，不取自 STS）。
- * 头像（biz=1）：`viewer/avatar/{viewerId}.{ext}`，同用户同格式覆盖，避免 TOS 堆无效图。
- * 反馈（biz=2）：`viewer/feedback/{viewerId}_{timestamp}.{ext}`，可多张，仍带时间戳。
+ * 头像（biz=1）：`viewer/avatar/{uid}.{ext}`，同用户同格式覆盖，避免 TOS 堆无效图。
+ * 反馈（biz=2）：`viewer/feedback/{uid}_{timestamp}.{ext}`，可多张，仍带时间戳。
  * @param {number} biz
- * @param {number|string} viewerId
+ * @param {number|string} uid
  * @param {string} ext
  * @returns {string}
  */
-function buildObjectKey(biz, viewerId, ext) {
+function buildObjectKey(biz, uid, ext) {
   const prefix = prefixOfBiz(biz).replace(/\/*$/, '/');
-  const id = String(viewerId || '0');
+  const id = String(uid || '0');
   if (biz === 1) {
     return prefix + id + '.' + ext;
   }
@@ -199,7 +199,7 @@ function uploadViaDirect(sts, filePath, objectKey, contentType) {
  * @param {object} opts
  * @param {string} opts.filePath
  * @param {number} [opts.fileSize]
- * @param {number|string} [opts.viewerId]
+ * @param {number|string} [opts.viewerUid]
  * @param {number} [opts.biz] 1 头像 / 2 意见反馈截图，默认 1
  * @returns {Promise<{objectKey: string, url: string, location: string}>}
  */
@@ -213,7 +213,7 @@ function uploadAvatar(opts) {
   const mode = getAvatarUploadMode();
   const ext = guessExt(filePath);
   const contentType = contentTypeOf(ext);
-  const objectKey = buildObjectKey(biz, o.viewerId, ext);
+  const objectKey = buildObjectKey(biz, o.viewerUid ?? o.viewerId, ext);
 
   return assertFileSize(filePath, o.fileSize).then(() => {
     if (mode === 'direct') {
