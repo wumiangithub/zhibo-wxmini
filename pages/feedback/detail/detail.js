@@ -1,5 +1,5 @@
-const { getAccessToken } = require('../../utils/auth');
-const { getFeedbackDetail } = require('../../api/live/feedback');
+const { getAccessToken } = require('../../../utils/auth');
+const { getFeedbackDetail } = require('../../../api/live/feedback');
 
 /**
  * 意见反馈详情（只读）。

@@ -1,9 +1,9 @@
-const { getAccessToken } = require('../../utils/auth');
+const { getAccessToken } = require('../../../utils/auth');
 const {
   listMyOrders,
   orderStatusLabel,
   ORDER_STATUS_UNPAID,
-} = require('../../api/orderCenter/orders');
+} = require('../../../api/orderCenter/orders');
 
 /** 每页条数（对方 pageSize 1～100） */
 const PAGE_SIZE = 20;
@@ -53,7 +53,7 @@ Page({
       return;
     }
     wx.navigateTo({
-      url: '/pages/orders/detail?orderId=' + encodeURIComponent(String(orderId)),
+      url: '/pages/orders/detail/detail?orderId=' + encodeURIComponent(String(orderId)),
     });
   },
 

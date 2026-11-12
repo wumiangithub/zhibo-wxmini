@@ -1,6 +1,6 @@
-const { getAccessToken, getViewerUsername } = require('../../utils/auth');
-const { displayNickname } = require('../../utils/displayNickname');
-const { getLiveWebBaseURL } = require('../../config/env');
+const { getAccessToken, getViewerUsername } = require('../../../utils/auth');
+const { displayNickname } = require('../../../utils/displayNickname');
+const { getLiveWebBaseURL } = require('../../../config/env');
 
 /**
  * 嵌套观众端 H5（live-web）观看页：

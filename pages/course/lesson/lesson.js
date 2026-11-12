@@ -1,6 +1,6 @@
-const { getAccessToken } = require('../../utils/auth');
-const { getMaterialFileIcon } = require('../../utils/materialFileIcons');
-const { normalizeArticleHtml } = require('../../utils/articleHtml');
+const { getAccessToken } = require('../../../utils/auth');
+const { getMaterialFileIcon } = require('../../../utils/materialFileIcons');
+const { normalizeArticleHtml } = require('../../../utils/articleHtml');
 const {
   getLearningLessonContent,
   reportLessonProgress,
@@ -10,11 +10,11 @@ const {
   KIND_VIDEO,
   KIND_DOCUMENT,
   KIND_ARTICLE,
-} = require('../../api/live/learning');
+} = require('../../../api/live/learning');
 
 /**
  * 原生课程小节页（图 / 视频 / 文档 / 文章）。
- * 直播 kind=1 上报 open 后跳转 pages/webview/watch。
+ * 直播 kind=1 上报 open 后跳转 pages/webview/watch/watch。
  * 与 live-web CourseLessonView 进度口径对齐（D101）。
  */
 Page({
@@ -129,7 +129,7 @@ Page({
           return this._report('open').then(() => {
             wx.redirectTo({
               url:
-                '/pages/webview/watch?id=' +
+                '/pages/webview/watch/watch?id=' +
                 encodeURIComponent(activityId) +
                 '&courseId=' +
                 encodeURIComponent(this._courseId) +
@@ -198,7 +198,7 @@ Page({
     if (!url) return;
     wx.navigateTo({
       url:
-        '/pages/file/open?url=' +
+        '/pages/file/open/open?url=' +
         encodeURIComponent(url) +
         '&name=' +
         encodeURIComponent(this.data.materialName || this.data.title || '图片') +
@@ -216,7 +216,7 @@ Page({
     const openMode = mode === 'download' ? 'download' : 'preview';
     wx.navigateTo({
       url:
-        '/pages/file/open?url=' +
+        '/pages/file/open/open?url=' +
         encodeURIComponent(url) +
         '&name=' +
         encodeURIComponent(this.data.docFileName || '文档') +

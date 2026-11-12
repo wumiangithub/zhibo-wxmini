@@ -32,8 +32,8 @@
  * lessonOpenByKind：按小节类型决定「小程序目录点小节」走原生还是嵌 H5。
  * 键：live 直播 / image 图片 / video 视频 / document 文档 / article 文章。
  * 值：'native' | 'webview'。未写的类型回落 native。独立浏览器 H5 始终可用，无此开关。
- * - native：`pages/course/lesson`。直播进该页后仍跳 `pages/webview/watch`。
- * - webview：`pages/webview/course-lesson` 嵌 live-web。
+ * - native：`pages/course/lesson/lesson`。直播进该页后仍跳 `pages/webview/watch/watch`。
+ * - webview：`pages/webview/course-lesson/course-lesson` 嵌 live-web。
  * 默认：文章 webview（富文本按浏览器排版，图片尺寸与小节预览一致），其余 native。
  */
 

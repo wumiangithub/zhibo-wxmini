@@ -1,10 +1,10 @@
-const { getAccessToken } = require('../../utils/auth');
-const { getLessonOpenMode } = require('../../config/env');
+const { getAccessToken } = require('../../../utils/auth');
+const { getLessonOpenMode } = require('../../../config/env');
 const {
   getLearningCourseDetail,
   NODE_CHAPTER,
   NODE_LESSON,
-} = require('../../api/live/learning');
+} = require('../../../api/live/learning');
 
 /** 无封面占位 */
 const DEFAULT_COVER = '/images/cover-live-1.png';
@@ -244,8 +244,8 @@ Page({
     const mode = getLessonOpenMode(e.currentTarget.dataset.kind);
     const path =
       mode === 'webview'
-        ? '/pages/webview/course-lesson?'
-        : '/pages/course/lesson?';
+        ? '/pages/webview/course-lesson/course-lesson?'
+        : '/pages/course/lesson/lesson?';
     wx.navigateTo({ url: path + q });
   },
 

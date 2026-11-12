@@ -68,7 +68,7 @@ Page({
   },
 
   onTapOrders() {
-    wx.navigateTo({ url: '/pages/orders/list' });
+    wx.navigateTo({ url: '/pages/orders/list/list' });
   },
 
   onTapLearning() {
@@ -84,7 +84,7 @@ Page({
   },
 
   onTapFeedback() {
-    wx.navigateTo({ url: '/pages/feedback/feedback' });
+    wx.navigateTo({ url: '/pages/feedback/feedback/feedback' });
   },
 
   onTapHotline() {

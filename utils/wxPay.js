@@ -1,6 +1,6 @@
 /**
  * 微信小程序 JSAPI 支付（wx.requestPayment）字段解析与唤起。
- * 供 pages/pay/request（H5 已 prepay 后带凭证跳转）与 pages/pay/checkout（本页 prepay）共用。
+ * 供 pages/pay/request/request（H5 已 prepay 后带凭证跳转）与 pages/pay/checkout/checkout（本页 prepay）共用。
  */
 
 /**

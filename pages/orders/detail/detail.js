@@ -1,5 +1,5 @@
-const { getAccessToken } = require('../../utils/auth');
-const { getPaidInfo } = require('../../api/orderCenter/orders');
+const { getAccessToken } = require('../../../utils/auth');
+const { getPaidInfo } = require('../../../api/orderCenter/orders');
 
 const DEFAULT_COVER = '/images/cover-course-1.png';
 

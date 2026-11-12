@@ -1,14 +1,14 @@
 /**
  * 原生微信支付页：解析 H5 navigateTo 传入的凭证后调 wx.requestPayment。
  * 供 live-web 在小程序 web-view 内、已 prepay 拿到 credential 后拉起（勿用 postMessage）。
- * 完整收银台 UI 见 pages/pay/checkout（支付步优先跳收银台，本页作纯唤起辅助）。
+ * 完整收银台 UI 见 pages/pay/checkout/checkout（支付步优先跳收银台，本页作纯唤起辅助）。
  *
  * query（二选一）：
  * - c  base64url(JSON)：{ timeStamp, nonceStr, package, signType, paySign }
  * - 或拆开：timeStamp / nonceStr / package / signType / paySign（调试用）
  */
 
-const { pickPayParams, requestPayment } = require('../../utils/wxPay');
+const { pickPayParams, requestPayment } = require('../../../utils/wxPay');
 
 function goBackSoon(ms) {
   setTimeout(() => wx.navigateBack({ fail() {} }), ms || 400);

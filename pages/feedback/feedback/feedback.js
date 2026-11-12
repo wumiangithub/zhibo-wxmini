@@ -1,7 +1,7 @@
-const { getAccessToken, getViewerUsername } = require('../../utils/auth');
-const { submitFeedback } = require('../../api/live/feedback');
-const { uploadAvatar, MAX_BYTES } = require('../../utils/avatarUpload');
-const { CATEGORIES } = require('../../utils/feedbackCategories');
+const { getAccessToken, getViewerUsername } = require('../../../utils/auth');
+const { submitFeedback } = require('../../../api/live/feedback');
+const { uploadAvatar, MAX_BYTES } = require('../../../utils/avatarUpload');
+const { CATEGORIES } = require('../../../utils/feedbackCategories');
 
 /** 意见描述字数上限（对齐契约） */
 const CONTENT_MAX = 200;
@@ -33,7 +33,7 @@ Page({
 
   /** 进入历史提交记录列表 */
   onTapHistory() {
-    wx.navigateTo({ url: '/pages/feedback/list' });
+    wx.navigateTo({ url: '/pages/feedback/list/list' });
   },
 
   onPickCategory(e) {
@@ -126,7 +126,7 @@ Page({
         wx.showToast({ title: '提交成功', icon: 'success' });
         setTimeout(() => {
           wx.navigateBack({
-            fail: () => wx.redirectTo({ url: '/pages/feedback/list' }),
+            fail: () => wx.redirectTo({ url: '/pages/feedback/list/list' }),
           });
         }, 500);
       })

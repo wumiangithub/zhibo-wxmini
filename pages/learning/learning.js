@@ -76,12 +76,12 @@ Page({
     }
     if (kind === 'course') {
       wx.navigateTo({
-        url: '/pages/course/detail?id=' + encodeURIComponent(id),
+        url: '/pages/course/detail/detail?id=' + encodeURIComponent(id),
       });
       return;
     }
     wx.navigateTo({
-      url: '/pages/webview/watch?id=' + encodeURIComponent(id),
+      url: '/pages/webview/watch/watch?id=' + encodeURIComponent(id),
     });
   },
 

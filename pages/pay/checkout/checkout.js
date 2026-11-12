@@ -15,19 +15,19 @@ const {
   getAccessToken,
   getMiniOpenid,
   applyUser,
-} = require('../../utils/auth');
-const { getUserInfo } = require('../../api/live/auth');
-const { getDictData, dictLabelValueMap } = require('../../api/live/dict');
+} = require('../../../utils/auth');
+const { getUserInfo } = require('../../../api/live/auth');
+const { getDictData, dictLabelValueMap } = require('../../../api/live/dict');
 const {
   getPaidDetail,
   prepayOrder,
   orderCenterErrorMessage,
-} = require('../../api/orderCenter/orders');
+} = require('../../../api/orderCenter/orders');
 const {
   pickPayParamsFromCredential,
   pickRedirectUrlFromCredential,
   requestPayment,
-} = require('../../utils/wxPay');
+} = require('../../../utils/wxPay');
 
 /** base64url → UTF-8 字符串 */
 function decodeBase64Url(input) {

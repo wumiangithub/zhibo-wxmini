@@ -44,5 +44,5 @@ function getMaterialFileIcon(filename) {
 }
 
 module.exports = {
-  getMaterialFileIcon,
+  getMaterialFileIcon: getMaterialFileIcon,
 };

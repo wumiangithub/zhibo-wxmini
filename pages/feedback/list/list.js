@@ -1,5 +1,5 @@
-const { getAccessToken } = require('../../utils/auth');
-const { listFeedback } = require('../../api/live/feedback');
+const { getAccessToken } = require('../../../utils/auth');
+const { listFeedback } = require('../../../api/live/feedback');
 
 /** 每页条数 */
 const PAGE_SIZE = 20;
@@ -36,7 +36,7 @@ Page({
   onTapItem(e) {
     const id = e.currentTarget.dataset.id;
     if (id == null) return;
-    wx.navigateTo({ url: '/pages/feedback/detail?id=' + id });
+    wx.navigateTo({ url: '/pages/feedback/detail/detail?id=' + id });
   },
 
   _reload() {
