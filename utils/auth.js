@@ -4,12 +4,27 @@ const ACCESS_KEY = 'viewerAccessToken';
 const REFRESH_KEY = 'viewerRefreshToken';
 /** 本地存储键：脱敏手机号展示用 */
 const PHONE_KEY = 'viewerPhoneMasked';
-/** 本地存储键：观众用户中心 uid（拼 TOS objectKey、web-view 传参） */
-const VIEWER_UID_KEY = 'viewerUid';
+/** 本地存储键：观众业务身份 username（≤16） */
+const VIEWER_USERNAME_KEY = 'viewerUsername';
+/** @deprecated 仅读兼容；读后清除 */
+const VIEWER_UID_KEY_LEGACY = 'viewerUid';
 /** 本地存储键：微信小程序 openid（wx_lite prepay 的 openId） */
 const MINI_OPENID_KEY = 'viewerMiniOpenid';
-/** @deprecated 仅读兼容；写入只用 viewerUid */
+/** @deprecated 仅读兼容 */
 const VIEWER_ID_KEY_LEGACY = 'viewerId';
+
+const USERNAME_MAX_LEN = 16;
+
+/**
+ * @param {*} raw
+ * @returns {string}
+ */
+function normalizeViewerUsername(raw) {
+  if (raw == null) return '';
+  const s = String(raw).trim();
+  if (!s || s.length > USERNAME_MAX_LEN) return '';
+  return s;
+}
 
 /**
  * 获取本地 accessToken。
@@ -36,13 +51,28 @@ function getPhoneMasked() {
 }
 
 /**
- * 获取本地观众用户中心 uid。
- * @returns {number|string}
+ * 获取本地观众业务身份 username。
+ * @returns {string}
+ */
+function getViewerUsername() {
+  const primary = normalizeViewerUsername(wx.getStorageSync(VIEWER_USERNAME_KEY));
+  if (primary) return primary;
+  const legacyRaw =
+    wx.getStorageSync(VIEWER_UID_KEY_LEGACY) || wx.getStorageSync(VIEWER_ID_KEY_LEGACY);
+  const legacy = normalizeViewerUsername(legacyRaw);
+  if (!legacy) return '';
+  wx.setStorageSync(VIEWER_USERNAME_KEY, legacy);
+  wx.removeStorageSync(VIEWER_UID_KEY_LEGACY);
+  wx.removeStorageSync(VIEWER_ID_KEY_LEGACY);
+  return legacy;
+}
+
+/**
+ * @deprecated D118：使用 getViewerUsername
+ * @returns {string}
  */
 function getViewerUid() {
-  const uid = wx.getStorageSync(VIEWER_UID_KEY);
-  if (uid != null && uid !== '') return uid;
-  return wx.getStorageSync(VIEWER_ID_KEY_LEGACY) || '';
+  return getViewerUsername();
 }
 
 /**
@@ -54,9 +84,9 @@ function getMiniOpenid() {
   return v != null ? String(v).trim() : '';
 }
 
-/** @deprecated 使用 getViewerUid */
+/** @deprecated 使用 getViewerUsername */
 function getViewerId() {
-  return getViewerUid();
+  return getViewerUsername();
 }
 
 /**
@@ -87,13 +117,15 @@ function setPhoneMasked(phoneMasked) {
 }
 
 /**
- * 将 /user-info 或资料接口返回的 user 同步到本地（手机号 / uid / 昵称头像缓存）。
+ * 将 /user-info 或资料接口返回的 user 同步到本地（手机号 / username / 昵称头像缓存）。
  * @param {object} [user]
  */
 function applyUser(user) {
   if (!user || typeof user !== 'object') return;
-  if (user.uid != null && user.uid !== '') {
-    wx.setStorageSync(VIEWER_UID_KEY, user.uid);
+  const username = normalizeViewerUsername(user.username);
+  if (username) {
+    wx.setStorageSync(VIEWER_USERNAME_KEY, username);
+    wx.removeStorageSync(VIEWER_UID_KEY_LEGACY);
     wx.removeStorageSync(VIEWER_ID_KEY_LEGACY);
   }
   if (typeof user.miniOpenid === 'string' && user.miniOpenid.trim()) {
@@ -120,13 +152,14 @@ function applyUser(user) {
 }
 
 /**
- * 清空本地会话（access / refresh / 手机号 / uid / miniOpenid）。
+ * 清空本地会话（access / refresh / 手机号 / username / miniOpenid）。
  */
 function clearSession() {
   wx.removeStorageSync(ACCESS_KEY);
   wx.removeStorageSync(REFRESH_KEY);
   wx.removeStorageSync(PHONE_KEY);
-  wx.removeStorageSync(VIEWER_UID_KEY);
+  wx.removeStorageSync(VIEWER_USERNAME_KEY);
+  wx.removeStorageSync(VIEWER_UID_KEY_LEGACY);
   wx.removeStorageSync(VIEWER_ID_KEY_LEGACY);
   wx.removeStorageSync(MINI_OPENID_KEY);
 }
@@ -154,11 +187,12 @@ module.exports = {
   ACCESS_KEY,
   REFRESH_KEY,
   PHONE_KEY,
-  VIEWER_UID_KEY,
+  VIEWER_USERNAME_KEY,
   MINI_OPENID_KEY,
   getAccessToken,
   getRefreshToken,
   getPhoneMasked,
+  getViewerUsername,
   getViewerUid,
   getMiniOpenid,
   getViewerId,

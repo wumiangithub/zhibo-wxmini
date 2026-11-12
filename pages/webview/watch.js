@@ -1,10 +1,10 @@
-const { getAccessToken, getViewerUid } = require('../../utils/auth');
+const { getAccessToken, getViewerUsername } = require('../../utils/auth');
 const { displayNickname } = require('../../utils/displayNickname');
 const { getLiveWebBaseURL } = require('../../config/env');
 
 /**
  * 嵌套观众端 H5（live-web）观看页：
- * `{liveWebBaseURL}/watch/{id}?uid=…&nickname=…&viewerAccessToken=…`（及既有 invite `c=` 等）。
+ * `{liveWebBaseURL}/watch/{id}?username=…&nickname=…&viewerAccessToken=…`（及既有 invite `c=` 等）。
  * 身份 / JWT / 展示昵称靠 query 传给 H5（不 postMessage；H5 落 localStorage 后可调 replay/start）。
  * 业务域名须在公众平台配置；local 开发者工具勾选不校验合法域名。
  */
@@ -34,6 +34,7 @@ Page({
     Object.keys(query || {}).forEach((key) => {
       if (
         key === 'id' ||
+        key === 'username' ||
         key === 'uid' ||
         key === 'nickname' ||
         key === 'viewerAccessToken' ||
@@ -48,10 +49,9 @@ Page({
       );
     });
 
-    const uid = getViewerUid();
-    const n = Number(uid);
-    if (Number.isInteger(n) && n > 0) {
-      pairs.push('uid=' + encodeURIComponent(String(n)));
+    const username = getViewerUsername();
+    if (username) {
+      pairs.push('username=' + encodeURIComponent(username));
       const nick = displayNickname();
       if (nick) {
         pairs.push('nickname=' + encodeURIComponent(nick));

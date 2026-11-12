@@ -1,10 +1,10 @@
-const { getAccessToken, getViewerUid } = require('../../utils/auth');
+const { getAccessToken, getViewerUsername } = require('../../utils/auth');
 const { displayNickname } = require('../../utils/displayNickname');
 const { getLiveWebBaseURL } = require('../../config/env');
 
 /**
  * 嵌套 live-web 课程小节页：
- * `{liveWebBaseURL}/course/{courseId}/lesson/{lessonNodeId}?uid&nickname&viewerAccessToken`
+ * `{liveWebBaseURL}/course/{courseId}/lesson/{lessonNodeId}?username&nickname&viewerAccessToken`
  */
 Page({
   data: {
@@ -31,10 +31,9 @@ Page({
     }
 
     const pairs = [];
-    const uid = getViewerUid();
-    const n = Number(uid);
-    if (Number.isInteger(n) && n > 0) {
-      pairs.push('uid=' + encodeURIComponent(String(n)));
+    const username = getViewerUsername();
+    if (username) {
+      pairs.push('username=' + encodeURIComponent(username));
       const nick = displayNickname();
       if (nick) {
         pairs.push('nickname=' + encodeURIComponent(nick));

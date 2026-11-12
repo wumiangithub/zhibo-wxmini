@@ -1,4 +1,4 @@
-const { getAccessToken, getViewerUid } = require('../../utils/auth');
+const { getAccessToken, getViewerUsername } = require('../../utils/auth');
 const { submitFeedback } = require('../../api/live/feedback');
 const { uploadAvatar, MAX_BYTES } = require('../../utils/avatarUpload');
 const { CATEGORIES } = require('../../utils/feedbackCategories');
@@ -109,11 +109,11 @@ Page({
       return;
     }
 
-    const viewerUid = getViewerUid();
+    const viewerUsername = getViewerUsername();
     const locals = this.data.images.slice();
     this.setData({ submitting: true });
 
-    this._uploadAll(locals, viewerUid)
+    this._uploadAll(locals, viewerUsername)
       .then((images) =>
         submitFeedback({
           category: this.data.category,
@@ -142,10 +142,10 @@ Page({
   /**
    * 串行上传本地截图；失败整单中止。
    * @param {Array<{path: string, size: number}>} locals
-   * @param {number|string} viewerUid
+   * @param {string} viewerUsername
    * @returns {Promise<Array<{url: string, objectKey: string}>>}
    */
-  _uploadAll(locals, viewerUid) {
+  _uploadAll(locals, viewerUsername) {
     if (!locals || !locals.length) {
       return Promise.resolve([]);
     }
@@ -156,7 +156,7 @@ Page({
         uploadAvatar({
           filePath: item.path,
           fileSize: item.size,
-          viewerUid: viewerUid,
+          viewerUsername: viewerUsername,
           biz: 2,
         }).then((r) => {
           out.push({ url: r.url, objectKey: r.objectKey });

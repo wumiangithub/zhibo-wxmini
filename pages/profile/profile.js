@@ -1,4 +1,4 @@
-const { getAccessToken, getViewerUid, applyUser } = require('../../utils/auth');
+const { getAccessToken, getViewerUsername, applyUser } = require('../../utils/auth');
 const { getUserInfo } = require('../../api/live/auth');
 const { updateProfile } = require('../../api/live/profile');
 const { uploadAvatar } = require('../../utils/avatarUpload');
@@ -42,7 +42,7 @@ Page({
       nickname: cached.nickname || '',
       nickLen: (cached.nickname || '').length,
     });
-    this._viewerUid = getViewerUid() || '';
+    this._viewerUsername = getViewerUsername() || '';
     this._pendingPath = '';
     this._pendingSize = 0;
     getUserInfo({ silent: true })
@@ -60,7 +60,8 @@ Page({
           next.avatarUrl = p.avatarUrl;
         }
         this.setData(next);
-        this._viewerUid = (user && user.uid) || getViewerUid() || '';
+        this._viewerUsername =
+          (user && user.username) || getViewerUsername() || '';
       })
       .catch(() => {});
   },
@@ -165,7 +166,7 @@ Page({
     uploadAvatar({
       filePath: pendingPath,
       fileSize: this._pendingSize,
-      viewerUid: this._viewerUid || getViewerUid(),
+      viewerUsername: this._viewerUsername || getViewerUsername(),
       biz: 1,
     })
       .then((up) =>

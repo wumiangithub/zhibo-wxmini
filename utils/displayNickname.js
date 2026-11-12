@@ -1,9 +1,9 @@
-const { getViewerUid, getPhoneMasked } = require('./auth');
+const { getViewerUsername, getPhoneMasked } = require('./auth');
 const { getProfile } = require('./profile');
 
 /**
  * 观众展示昵称（对齐 API约定「通则 · 观众展示昵称」）：
- * 有昵称→昵称；无昵称有手机→`用户`+尾号 4 位；否则→`用户_`+id。
+ * 有昵称→昵称；无昵称有手机→`用户`+尾号 4 位；否则→`用户_`+username。
  * 小程序打开 web-view 观看页时拼进 URL `nickname=`，供 H5 /watch/sdk 使用。
  *
  * @returns {string}
@@ -22,10 +22,9 @@ function displayNickname() {
     }
   }
 
-  const id = getViewerUid();
-  const n = Number(id);
-  if (Number.isInteger(n) && n > 0) {
-    return '用户_' + n;
+  const username = getViewerUsername();
+  if (username) {
+    return '用户_' + username;
   }
   return '用户_0';
 }
