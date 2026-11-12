@@ -9,6 +9,7 @@
       wx:for="{{list}}"
       wx:key="orderId"
       data-orderid="{{item.orderId}}"
+      data-status="{{item.orderStatus}}"
       bindtap="onTapItem"
     >
       <view class="card-head">

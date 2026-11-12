@@ -123,15 +123,6 @@ function isPaidOrder(status) {
 }
 
 /**
- * 「全部订单」列表：除待支付(1010)外都展示。
- * @param {number} status
- * @returns {boolean}
- */
-function isListVisibleOrder(status) {
-  return status !== ORDER_STATUS_UNPAID;
-}
-
-/**
  * 已付款订单详情（我的订单 / 支付完成页）。
  * POST …/order-center/api/live/viewer/order/paid-info
  * Body：orderId = 订单主键
@@ -385,7 +376,6 @@ module.exports = {
   listMyOrders,
   orderStatusLabel,
   isPaidOrder,
-  isListVisibleOrder,
   normalizeOrderItem,
   getPaidInfo,
   getPaidDetail,

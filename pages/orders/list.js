@@ -2,19 +2,18 @@ const { getAccessToken } = require('../../utils/auth');
 const {
   listMyOrders,
   orderStatusLabel,
-  isListVisibleOrder,
+  ORDER_STATUS_UNPAID,
 } = require('../../api/orderCenter/orders');
 
 /** 每页条数（对方 pageSize 1～100） */
 const PAGE_SIZE = 20;
 /** 无封面时的占位图；对方列表暂无 coverImg */
 const DEFAULT_COVER = '/images/cover-course-1.png';
-/** 连续空页（过滤后无可见订单）最多再拉几页，避免死循环 */
-const MAX_SKIP_EMPTY = 5;
 
 /**
  * 全部订单：直连订单中心观众端列表（§5.6）。
- * 除待支付(1010)外都展示；点卡片用 orderId 进详情 paid-info。
+ * 全部状态都展示；非待支付点卡片用 orderId 进详情 paid-info；
+ * 待支付后续接继续支付。
  */
 Page({
   data: {
@@ -44,8 +43,13 @@ Page({
 
   onTapItem(e) {
     const orderId = e.currentTarget.dataset.orderid;
+    const status = Number(e.currentTarget.dataset.status);
     if (!orderId) {
       wx.showToast({ title: '订单无效', icon: 'none' });
+      return;
+    }
+    if (status === ORDER_STATUS_UNPAID) {
+      wx.showToast({ title: '待支付订单支付流程待接入', icon: 'none' });
       return;
     }
     wx.navigateTo({
@@ -55,41 +59,29 @@ Page({
 
   _reload() {
     this.setData({ page: 1, noMore: false, list: [] });
-    return this._fetch(1, true, 0);
+    return this._fetch(1, true);
   },
 
   _loadMore() {
-    return this._fetch(this.data.page + 1, false, 0);
+    return this._fetch(this.data.page + 1, false);
   },
 
   /**
    * @param {number} page
    * @param {boolean} replace
-   * @param {number} emptySkips 本轮已跳过的「过滤后为空」页数
    */
-  _fetch(page, replace, emptySkips) {
-    if (this.data.loading && emptySkips === 0) return Promise.resolve();
+  _fetch(page, replace) {
+    if (this.data.loading && replace) return Promise.resolve();
     this.setData({ loading: true });
     return listMyOrders({ page: page, pageSize: PAGE_SIZE })
       .then((data) => {
         const rawList = (data && data.list) || [];
-        const rows = rawList
-          .filter((item) => isListVisibleOrder(item.orderStatus))
-          .map((item) => this._toView(item));
-        const rawLen = rawList.length;
-        const remoteNoMore = rawLen < PAGE_SIZE;
-
-        // 本页过滤后为空但仍有下一页：继续拉，避免误显「暂无」
-        if (rows.length === 0 && !remoteNoMore && emptySkips < MAX_SKIP_EMPTY) {
-          this.setData({ page: page });
-          return this._fetch(page + 1, replace, emptySkips + 1);
-        }
-
+        const rows = rawList.map((item) => this._toView(item));
         const list = replace ? rows : this.data.list.concat(rows);
         this.setData({
           list: list,
           page: page,
-          noMore: remoteNoMore || emptySkips >= MAX_SKIP_EMPTY,
+          noMore: rawList.length < PAGE_SIZE,
         });
       })
       .catch(() => {
@@ -120,6 +112,7 @@ Page({
       orderMoney: item.orderMoney || '0.00',
       coverImg: item.coverImg || '',
       statusLabel: orderStatusLabel(item.orderStatus) || '已支付',
+      orderStatus: item.orderStatus,
       validityText: validityText,
     };
   },
