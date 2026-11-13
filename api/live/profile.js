@@ -9,9 +9,9 @@ const UPDATE_PATH = '/viewer/profile/update';
  * 更新昵称，或把头像的访问地址和对象键一起写入。
  * @param {object} payload
  * @param {string} payload.nickname
- * @param {string} [payload.avatarUrl] 与 avatarObjectKey 成对
- * @param {string} [payload.avatarObjectKey] TOS 对象键
- * @returns {Promise<object>} user
+ * @param {string} [payload.avatarUrl] 与 avatarObjectKey 成对；落库
+ * @param {string} [payload.avatarObjectKey] TOS 对象键；仅服务端校验，不落库
+ * @returns {Promise<{ nickname?: string, avatarUrl?: string }>} 只含昵称与头像
  */
 function updateProfile(payload) {
   const p = payload || {};

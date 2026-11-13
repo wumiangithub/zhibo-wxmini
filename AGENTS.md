@@ -29,7 +29,7 @@ Cursor 做派给「小程序」的待办；Grok bot 做派给「小程序（Grok
 
 ## 图片 / 文件上传（D60）
 
-观众图片上传：对象键前缀与管理端一样由前端定义（`utils/avatarUpload.js` 的 `ViewerObjectKeyPrefix`，对齐 API约定目录表）。`proxy`（默认）拼 `objectKey` 后 `POST .../uploads/file`；`direct` 再 `GET .../tos-sts` 拿凭证，按火山官方小程序文档走 `@volcengine/tos-sdk` 的 `calculatePostSignature` + `wx.uploadFile`（PostObject）。两条都返回 `objectKey`、`url`、`location`。头像 `biz=1`，反馈 `biz=2`。`PUT .../profile/update` 同时交 `avatarUrl` 和 `avatarObjectKey`。**禁止**微吼上传，也禁止再为单个功能加专用上传接口。改依赖后须 `npm ci` 再 `npm run build:npm`（生成并提交 `miniprogram_npm/`）。
+观众图片上传：对象键前缀与管理端一样由前端定义（`utils/avatarUpload.js` 的 `ViewerObjectKeyPrefix`，对齐 API约定目录表）。`proxy`（默认）拼 `objectKey` 后 `POST .../uploads/file`；`direct` 再 `GET .../tos-sts` 拿凭证，按火山官方小程序文档走 `@volcengine/tos-sdk` 的 `calculatePostSignature` + `wx.uploadFile`（PostObject）。两条都返回 `objectKey`、`url`、`location`。头像 `biz=1`，反馈 `biz=2`。`PUT .../profile/update` 同时交 `avatarUrl` 和 `avatarObjectKey`（objectKey 仅校验不落库）。**禁止**微吼上传，也禁止再为单个功能加专用上传接口。改依赖后须 `npm ci` 再 `npm run build:npm`（生成并提交 `miniprogram_npm/`）。
 
 ## 依赖版本（D36，强制）
 

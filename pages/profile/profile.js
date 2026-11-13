@@ -130,9 +130,13 @@ Page({
     this.setData({ saving: true });
     wx.showLoading({ title: '保存中', mask: true });
 
-    const afterOk = (user) => {
-      if (user) applyUser(user);
-      else saveProfile({ nickname: nickname });
+    const afterOk = (data) => {
+      const patch = { nickname: nickname };
+      if (data && typeof data.nickname === 'string') patch.nickname = data.nickname;
+      if (data && typeof data.avatarUrl === 'string' && data.avatarUrl) {
+        patch.avatarUrl = data.avatarUrl;
+      }
+      saveProfile(patch);
       this._pendingPath = '';
       this._pendingSize = 0;
       wx.showToast({ title: '已保存', icon: 'success' });
